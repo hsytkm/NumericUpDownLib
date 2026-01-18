@@ -64,17 +64,17 @@ namespace NUnitTestProject
 					{
 						case "min":
 							range.MinValue = min;
-							Assert.IsTrue(IsValidRange(range));
+							Assert.That(IsValidRange(range));
 							break;
 
 						case "val":
 							range.Value = val;
-							Assert.IsTrue(IsValidRange(range));
+							Assert.That(IsValidRange(range));
 							break;
 
 						case "max":
 							range.MaxValue = max;
-							Assert.IsTrue(IsValidRange(range));
+							Assert.That(IsValidRange(range));
 							break;
 
 						default:
@@ -83,27 +83,27 @@ namespace NUnitTestProject
 				}
 
 				Console.WriteLine("Testing Permutation {0}: {1} - min={2}, val={3}, max={4}", i, testPermutation, min, val, max);
-				Assert.IsTrue(IsValidRange(range));
+				Assert.That(IsValidRange(range));
 
-				Assert.IsTrue(range.MinValue == min);
-				Assert.IsTrue(range.Value == val);
-				Assert.IsTrue(range.MaxValue == max);
+				Assert.That(range.MinValue == min);
+				Assert.That(range.Value == val);
+				Assert.That(range.MaxValue == max);
 
 				// Test if increment command works as expected
 				while(range.MaxValue > range.Value)
 				{
-					Assert.IsTrue(InputBaseUpDown.IncreaseCommand.CanExecute(null, range));
+					Assert.That(InputBaseUpDown.IncreaseCommand.CanExecute(null, range));
 					InputBaseUpDown.IncreaseCommand.Execute(null, range);
 				}
-				Assert.IsTrue(range.MaxValue == range.Value);
+				Assert.That(range.MaxValue == range.Value);
 
 				// Test if decrement command works as expected
 				while (range.MinValue < range.Value)
 				{
-					Assert.IsTrue(InputBaseUpDown.DecreaseCommand.CanExecute(null, range));
+					Assert.That(InputBaseUpDown.DecreaseCommand.CanExecute(null, range));
 					InputBaseUpDown.DecreaseCommand.Execute(null, range);
 				}
-				Assert.IsTrue(range.MinValue == range.Value);
+				Assert.That(range.MinValue == range.Value);
 			}
 		}
 
