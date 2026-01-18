@@ -1,8 +1,8 @@
 ﻿namespace SettingsModel.Interfaces
 {
-    using SettingsModel.Models;
     using System;
     using System.Collections.Generic;
+    using SettingsModel.Models;
 
     /// <summary>
     /// Defines available schema information for 1 option.

@@ -1,9 +1,9 @@
 ﻿namespace SettingsModel
 {
-    using SettingsModel.Interfaces;
-    using SettingsModel.Models.XML;
     using System;
     using System.Collections.Generic;
+    using SettingsModel.Interfaces;
+    using SettingsModel.Models.XML;
 
     /// <summary>
     /// Defines an interface to an object that implements an OptionsGroup/Options management engine.

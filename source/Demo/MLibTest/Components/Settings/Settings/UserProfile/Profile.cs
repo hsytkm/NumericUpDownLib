@@ -1,9 +1,9 @@
 ﻿namespace Settings.UserProfile
 {
-    using Settings.Interfaces;
-    using SettingsModel.Models;
     using System.Collections.Generic;
     using System.Xml.Serialization;
+    using Settings.Interfaces;
+    using SettingsModel.Models;
 
     /// <summary>
     /// This class implements the model of the user profile part

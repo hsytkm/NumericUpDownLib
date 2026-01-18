@@ -1,9 +1,9 @@
 ﻿namespace SettingsModel
 {
-    using SettingsModel.Interfaces;
-    using SettingsModel.Models;
     using System;
     using System.Collections.Generic;
+    using SettingsModel.Interfaces;
+    using SettingsModel.Models;
 
     /// <summary>
     /// An <seealso cref="OptionGroup"/> is a set of options that is either grouped

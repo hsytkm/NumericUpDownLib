@@ -1,8 +1,5 @@
 ﻿namespace Settings.Interfaces
 {
-    using Settings.ProgramSettings;
-    using System.Collections.Generic;
-
     public interface IOptions
     {
         #region properties

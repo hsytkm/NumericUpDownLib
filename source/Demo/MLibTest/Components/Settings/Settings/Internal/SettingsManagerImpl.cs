@@ -1,15 +1,15 @@
 ﻿namespace Settings.Internal
 {
-    using Settings.Interfaces;
-    using Settings.ProgramSettings;
-    using MLib.Interfaces;
-    using Settings.UserProfile;
-    using SettingsModel.Interfaces;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Xml;
     using System.Xml.Serialization;
+    using MLib.Interfaces;
+    using Settings.Interfaces;
+    using Settings.ProgramSettings;
+    using Settings.UserProfile;
+    using SettingsModel.Interfaces;
 
     /// <summary>
     /// This class keeps track of program options and user profile (session) data.
@@ -96,7 +96,7 @@
         {
             get
             {
-                return 16*8;
+                return 16 * 8;
             }
         }
 

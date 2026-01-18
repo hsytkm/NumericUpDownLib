@@ -1,9 +1,9 @@
 ﻿namespace Settings.Interfaces
 {
-    using Settings.ProgramSettings;
-    using MLib.Interfaces;
     using System.Collections.Generic;
     using System.Xml.Serialization;
+    using MLib.Interfaces;
+    using Settings.ProgramSettings;
 
     public interface ISettingsManager : IOptionsPanel
     {

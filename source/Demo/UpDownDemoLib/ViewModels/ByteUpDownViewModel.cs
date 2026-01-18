@@ -8,15 +8,15 @@
     /// </summary>
     public class ByteUpDownViewModel : BaseUpDownViewModel<byte>
     {
-		/// <summary>
-		/// Class constructor
-		/// </summary>
-		/// <param name="value"></param>
-		/// <param name="minimumValue"></param>
-		/// <param name="maximumValue"></param>
-		/// <param name="stepSize"></param>
-		/// <param name="largeStepSize"></param>
-		public ByteUpDownViewModel(byte value,
+        /// <summary>
+        /// Class constructor
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="minimumValue"></param>
+        /// <param name="maximumValue"></param>
+        /// <param name="stepSize"></param>
+        /// <param name="largeStepSize"></param>
+        public ByteUpDownViewModel(byte value,
                                    byte minimumValue,
                                    byte maximumValue,
                                    byte stepSize,

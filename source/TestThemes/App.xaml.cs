@@ -1,5 +1,10 @@
 ﻿namespace TestThemes
 {
+    using System;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.Threading;
+    using System.Windows;
     using log4net;
     using log4net.Config;
     using MLib.Interfaces;
@@ -7,11 +12,6 @@
     using MWindowInterfacesLib.Interfaces;
     using Settings.Interfaces;
     using Settings.UserProfile;
-    using System;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.Threading;
-    using System.Windows;
     using ViewModels;
 
     /// <summary>

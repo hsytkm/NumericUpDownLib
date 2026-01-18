@@ -1,12 +1,12 @@
 ﻿namespace SettingsModel.Models.XML
 {
-    using SettingsModel.Interfaces;
-    using SettingsModel.Models.XML.Converters;
     using System;
     using System.Data;
     using System.IO;
     using System.Linq;
     using System.Security;
+    using SettingsModel.Interfaces;
+    using SettingsModel.Models.XML.Converters;
 
     /// <summary>
     /// Host API necessary to read and write settings model related data
@@ -227,7 +227,7 @@
                             // assumption: Address first column in each row since list
                             // table contains only 1 data column
                             optionsGroup.SetValue(optionName, table.Rows[i].ItemArray[0]);
-                        }                       
+                        }
                     }
                 }
                 else
@@ -310,7 +310,7 @@
             bool IsFirstRow = true;
 
             foreach (var item in columnSchema.List_GetListOfValues())
-	        {
+            {
                 if (IsFirstRow == true)
                 {
                     IsFirstRow = false;
@@ -321,17 +321,17 @@
                     else
                         masterRow[columnSchema.OptionName] = item;
                 }
-                
-                
+
+
                 var row = dataTable.NewRow();
 
-                    if (handler != null)
-                        row[columnSchema.OptionName] = handler.Convert(item as SecureString);
-                    else
-                        row[columnSchema.OptionName] = item;
+                if (handler != null)
+                    row[columnSchema.OptionName] = handler.Convert(item as SecureString);
+                else
+                    row[columnSchema.OptionName] = item;
 
-                    dataTable.Rows.Add(row);
-	        }
+                dataTable.Rows.Add(row);
+            }
 
             return dataTable;
         }

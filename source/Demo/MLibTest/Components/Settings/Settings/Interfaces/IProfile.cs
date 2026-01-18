@@ -1,9 +1,8 @@
 ﻿namespace Settings.Interfaces
 {
+    using System.Collections.Generic;
     using Settings.UserProfile;
     using SettingsModel.Models;
-    using System;
-    using System.Collections.Generic;
 
     public interface IProfile
     {

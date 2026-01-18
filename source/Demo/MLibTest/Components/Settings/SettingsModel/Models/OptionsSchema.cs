@@ -1,8 +1,8 @@
 ﻿namespace SettingsModel.Models
 {
-    using SettingsModel.Interfaces;
     using System;
     using System.Collections.Generic;
+    using SettingsModel.Interfaces;
 
     /// <summary>
     /// Determines the type of schema of a schema object <seealso cref="IOptionsSchema"/>
@@ -28,7 +28,7 @@
         #region fields
         private Dictionary<object, object> mValues;
         #endregion fields
-        
+
         #region constructors
         /// <summary>
         /// Class constructor
@@ -165,7 +165,7 @@
 
             if (this.mValues != null)
                 return this.mValues.TryGetValue(key, out value);
-                
+
             return false;
         }
 

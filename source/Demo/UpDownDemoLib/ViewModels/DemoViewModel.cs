@@ -1,9 +1,5 @@
 ﻿namespace UpDownDemoLib.Demos.ViewModels
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Windows.Input;
-
     /// <summary>
     /// This viewmodel controls all aspects of the themed control demo
     /// in this test application.
@@ -27,7 +23,7 @@
 
             UShortDemo = new UShortUpDownViewModel(0, ushort.MinValue, ushort.MaxValue, 1, 10000);
             UIntegerDemo = new UIntegerUpDownViewModel(0, uint.MinValue, uint.MaxValue, 1, 10000);
-            ULongDemo = new ULongUpDownViewModel(0, ulong.MinValue, ulong.MaxValue, 1,1000);
+            ULongDemo = new ULongUpDownViewModel(0, ulong.MinValue, ulong.MaxValue, 1, 1000);
 
             PercentageZeroToOneDemo = new DoubleUpDownViewModel(0.3, 0, 1, 0.01, 0.1);
             PercentageZeroTo100Demo = new DoubleUpDownViewModel(30, 0, 100, 0.1, 1);

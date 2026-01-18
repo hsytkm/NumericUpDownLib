@@ -1,7 +1,7 @@
 ﻿namespace SettingsModel.Interfaces
 {
     using System;
-using System.Collections.Generic;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Defines an interface to an object that implements an OptionsGroup/Options management engine.
