@@ -3,10 +3,8 @@
   <PropertyGroup>
     <TargetFrameworks>net48;net8.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
-    <!--
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    -->
     <LangVersion>14</LangVersion>
 
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

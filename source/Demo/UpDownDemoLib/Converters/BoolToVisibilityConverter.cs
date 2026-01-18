@@ -23,7 +23,7 @@ public sealed class BoolToVisibilityConverter : IValueConverter
     /// <returns></returns>
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        var back = ((value is Visibility) && (((Visibility)value) == Visibility.Visible));
+        var back = (value is Visibility) && (((Visibility)value) == Visibility.Visible);
 
         if (parameter != null)
         {

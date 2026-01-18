@@ -1,7 +1,8 @@
-﻿
+﻿#nullable disable
 using System.Windows;
 
 namespace NumericUpDownLib.Themes;
+
 /// <summary>
 /// Resource key management class to keep track of all resources
 /// that can be re-styled in applications that make use of the implemented controls.

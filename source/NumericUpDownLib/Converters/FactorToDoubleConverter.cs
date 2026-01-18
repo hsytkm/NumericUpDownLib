@@ -1,10 +1,10 @@
-﻿
-using System;
+﻿#nullable disable
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
 namespace NumericUpDownLib.Converters;
+
 /// <summary>
 /// Scales a double value by its scale factor (eg. 100.00) up (convert)
 /// or down (convertback), or vice versa if factor is set to 0.01...
@@ -67,7 +67,7 @@ public sealed class FactorToDoubleConverter : IValueConverter
     {
         if (value is float)  // Do division with float and output float
         {
-            var val = (double)((float)value);
+            var val = (double)(float)value;
 
             return (float)(val / Factor);
         }

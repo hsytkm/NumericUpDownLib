@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿#nullable disable
 using System.Globalization;
 using System.Windows;
 using NumericUpDownLib.Base;
@@ -100,7 +99,7 @@ public partial class DoubleUpDown : AbstractBaseUpDown<double>
     /// <returns>true if command is enabled, otherwise false</returns>
     protected override bool CanIncreaseCommand()
     {
-        return (Value < MaxValue);
+        return Value < MaxValue;
     }
 
     /// <summary>
@@ -109,7 +108,7 @@ public partial class DoubleUpDown : AbstractBaseUpDown<double>
     /// <returns>true if command is enabled, otherwise false</returns>
     protected override bool CanDecreaseCommand()
     {
-        return (Value > MinValue);
+        return Value > MinValue;
     }
 
     /// <summary>
@@ -339,7 +338,7 @@ public partial class DoubleUpDown : AbstractBaseUpDown<double>
     private static bool IsValidStepSizeReading(object value)
     {
         double v = (double)value;
-        return (v > 0);
+        return v > 0;
     }
     #endregion methods
 }

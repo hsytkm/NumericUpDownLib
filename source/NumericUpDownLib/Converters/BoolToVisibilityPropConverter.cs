@@ -1,10 +1,10 @@
-﻿
-using System;
+﻿#nullable disable
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
 namespace NumericUpDownLib.Converters;
+
 /// <summary>
 /// Converts a boolean value into a configurable
 /// value of type <seealso cref="Visibility"/>.

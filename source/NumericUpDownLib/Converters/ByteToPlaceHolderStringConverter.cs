@@ -1,9 +1,9 @@
-﻿
-using System;
+﻿#nullable disable
 using System.Globalization;
 using System.Windows.Data;
 
 namespace NumericUpDownLib.Converters;
+
 /// <summary>
 /// Converts a byte number into a string that contains the number 'X' characters input.
 /// The output of this converter can be used to measure UI Air space to ensure enough

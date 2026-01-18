@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿#nullable disable
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -10,6 +9,7 @@ using NumericUpDownLib.Enums;
 using NumericUpDownLib.Models;
 
 namespace NumericUpDownLib.Base;
+
 /// <summary>
 /// Implements an up/down abstract base control.
 /// Source: http://msdn.microsoft.com/en-us/library/vstudio/ms771573%28v=vs.90%29.aspx
@@ -737,7 +737,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
 
         if (_PART_TextBox != null)
         {
-            if ((bool)(e.NewValue) == false)
+            if ((bool)e.NewValue == false)
                 _PART_TextBox.Cursor = Cursors.IBeam;
             else
                 _PART_TextBox.Cursor = Cursors.ScrollAll;
@@ -847,8 +847,8 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
         }
 
         var pos = GetPositionFromThis(e);
-        double deltaX = (CanMouseDrag == CanIncDecMouseDrag.VerticalOnly ? 0 : _objMouseIncr.Point.X - pos.X);
-        double deltaY = (CanMouseDrag == CanIncDecMouseDrag.HorizontalOnly ? 0 : _objMouseIncr.Point.Y - pos.Y);
+        double deltaX = CanMouseDrag == CanIncDecMouseDrag.VerticalOnly ? 0 : _objMouseIncr.Point.X - pos.X;
+        double deltaY = CanMouseDrag == CanIncDecMouseDrag.HorizontalOnly ? 0 : _objMouseIncr.Point.Y - pos.Y;
 
         if (_objMouseIncr.MouseDirection == MouseDirections.None)
         {
@@ -1102,7 +1102,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
             }
         }
 
-        var isCtrlDown = (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl));
+        var isCtrlDown = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
 
         // update value typed by the user
         if (e.Key == Key.Enter)

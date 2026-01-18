@@ -1,10 +1,11 @@
-﻿
+﻿#nullable disable
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 
 namespace NumericUpDownLib.Base;
+
 /// <summary>
 /// Class implements a repeat button custom control that supports
 /// custom <seealso cref="Geometry"/> data for display as an error and

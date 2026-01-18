@@ -1,8 +1,8 @@
-﻿
-using System;
+﻿#nullable disable
 using System.Windows;
 
 namespace NumericUpDownLib.Models;
+
 /// <summary>
 /// Models a simple object that keeps track of the direction in which
 /// a mouse was moved, its initial coordinates on the screen and its

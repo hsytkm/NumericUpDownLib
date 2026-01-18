@@ -254,7 +254,7 @@ internal class XMLLayer
 
         foreach (var item in tableSchema.GetOptionDefinitions())
         {
-            var col = new DataColumn(item.OptionName, (item.TypeOfValue == typeof(SecureString) ? typeof(string) : item.TypeOfValue))
+            var col = new DataColumn(item.OptionName, item.TypeOfValue == typeof(SecureString) ? typeof(string) : item.TypeOfValue)
             {
                 AllowDBNull = item.IsOptional
             };
@@ -282,8 +282,8 @@ internal class XMLLayer
         var dataTable = new DataTable(tableName);
 
         var col = new DataColumn(columnSchema.OptionName,
-                                (columnSchema.TypeOfValue == typeof(SecureString) ? typeof(string) :
-                                                                                    columnSchema.TypeOfValue))
+                                columnSchema.TypeOfValue == typeof(SecureString) ? typeof(string) :
+                                                                                    columnSchema.TypeOfValue)
         {
             AllowDBNull = columnSchema.IsOptional
         };

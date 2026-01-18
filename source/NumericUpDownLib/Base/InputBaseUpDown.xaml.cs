@@ -1,10 +1,11 @@
-﻿
+﻿#nullable disable
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace NumericUpDownLib.Base;
+
 /// <summary>
 /// This class serves as a target for styling the <see cref="AbstractBaseUpDown{T}"/> class
 /// since styling directly on <see cref="AbstractBaseUpDown{T}"/> is not supported in XAML.
