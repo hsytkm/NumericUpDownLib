@@ -1,5 +1,4 @@
-﻿#nullable disable
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -35,7 +34,7 @@ public class NumericRepeatButtonControl : RepeatButton
     /// This enables styling and usage of flexible binding.
     /// </summary>
     public static readonly DependencyProperty RepeatButtonContentProperty =
-        DependencyProperty.Register("RepeatButtonContent",
+        DependencyProperty.Register(nameof(RepeatButtonContent),
                                     typeof(Geometry),
                                     typeof(NumericRepeatButtonControl),
                                     new PropertyMetadata(null));
@@ -56,7 +55,7 @@ public class NumericRepeatButtonControl : RepeatButton
     /// Implments the backing store for a DependencyProperty of the ClickCommand.
     /// </summary>
     public static readonly DependencyProperty ClickCommandProperty =
-        DependencyProperty.Register("ClickCommand",
+        DependencyProperty.Register(nameof(ClickCommand),
                                     typeof(ICommand),
                                     typeof(NumericRepeatButtonControl),
                                     new PropertyMetadata(null));

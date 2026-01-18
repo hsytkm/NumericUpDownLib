@@ -65,7 +65,7 @@ internal sealed class OptionGroup : IOptionGroup
     public IOptionsSchema GetOptionDefinition(string optionName)
     {
 
-        if (OptionDefinitions.TryGetValue(optionName, out var ret) == true)
+        if (OptionDefinitions.TryGetValue(optionName, out var ret))
             return ret;
 
         return null;
@@ -81,7 +81,7 @@ internal sealed class OptionGroup : IOptionGroup
     {
         outresult = null;
 
-        if (OptionDefinitions.TryGetValue(optionName, out var result) == false)
+        if (!OptionDefinitions.TryGetValue(optionName, out var result))
             return false;
 
         outresult = result.Value;
@@ -100,7 +100,7 @@ internal sealed class OptionGroup : IOptionGroup
     public object GetValue(string optionName)
     {
 
-        if (GetValue(optionName, out var optValue) == false)
+        if (!GetValue(optionName, out var optValue))
             throw new Exception(string.Format("The application option {0}-{1} cannot be located.",
                 Name, optionName));
 
@@ -119,7 +119,7 @@ internal sealed class OptionGroup : IOptionGroup
     {
         object optValue = GetValue(optionName);
 
-        if ((optValue is T) == false)
+        if (optValue is not T)
             throw new Exception(string.Format("The requested option {0}-{1} is not of requested type <T>.",
             Name, optionName));
 
@@ -135,7 +135,7 @@ internal sealed class OptionGroup : IOptionGroup
     public bool SetValue(string optionName, object newValue)
     {
 
-        if (OptionDefinitions.TryGetValue(optionName, out var result) == false)
+        if (!OptionDefinitions.TryGetValue(optionName, out var result))
             return false;
 
         if (result.TypeOfValue != newValue.GetType())
@@ -179,7 +179,7 @@ internal sealed class OptionGroup : IOptionGroup
     public bool List_Clear(string optionName)
     {
 
-        if (OptionDefinitions.TryGetValue(optionName, out var result) == false)
+        if (!OptionDefinitions.TryGetValue(optionName, out var result))
             return false;
 
         result.List_Clear();

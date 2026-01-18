@@ -1,5 +1,4 @@
-﻿#nullable disable
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -12,39 +11,36 @@ namespace NumericUpDownLib.Base;
 /// </summary>
 public abstract class InputBaseUpDown : Control
 {
-    #region fields
     /// <summary>
     /// Determines whether the textbox portion of the control is editable
     /// (requires additional check of bounds) or not.
     /// </summary>
     public static readonly DependencyProperty IsReadOnlyProperty =
-        DependencyProperty.Register("IsReadOnly",
-            typeof(bool), typeof(InputBaseUpDown), new PropertyMetadata(true));
+        DependencyProperty.Register(nameof(IsReadOnly), typeof(bool), typeof(InputBaseUpDown), new PropertyMetadata(true));
 
     /// <summary>
     /// Determines the allowed style of a number entered and displayed in the textbox.
     /// </summary>
     public static readonly DependencyProperty NumberStyleProperty =
-        DependencyProperty.Register("NumberStyle", typeof(NumberStyles),
-            typeof(InputBaseUpDown), new PropertyMetadata(NumberStyles.Any));
+        DependencyProperty.Register(nameof(NumberStyle), typeof(NumberStyles), typeof(InputBaseUpDown), new PropertyMetadata(NumberStyles.Any));
 
     /// <summary>
     /// Backing store of <see cref="EnableValidatingIndicator"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty EnableValidatingIndicatorProperty =
-        DependencyProperty.Register("EnableValidatingIndicator", typeof(bool), typeof(InputBaseUpDown), new PropertyMetadata(false));
+        DependencyProperty.Register(nameof(EnableValidatingIndicator), typeof(bool), typeof(InputBaseUpDown), new PropertyMetadata(false));
 
     /// <summary>
     /// Backing store of <see cref="EditingVisibility"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty EditingVisibilityProperty =
-        DependencyProperty.Register("EditingVisibility", typeof(Visibility), typeof(InputBaseUpDown), new PropertyMetadata(Visibility.Hidden));
+        DependencyProperty.Register(nameof(EditingVisibility), typeof(Visibility), typeof(InputBaseUpDown), new PropertyMetadata(Visibility.Hidden));
 
     /// <summary>
     /// Backing store of <see cref="EditingColorBrush"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty EditingColorBrushProperty =
-        DependencyProperty.Register("EditingColorBrush", typeof(System.Windows.Media.SolidColorBrush),
+        DependencyProperty.Register(nameof(EditingColorBrush), typeof(System.Windows.Media.SolidColorBrush),
             typeof(InputBaseUpDown), new PropertyMetadata(new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Green)));
 
 
@@ -78,28 +74,33 @@ public abstract class InputBaseUpDown : Control
         set => SetValue(EnableValidatingIndicatorProperty, value);
     }
 
-    private static RoutedCommand _IncreaseCommand;
-    private static RoutedCommand _DecreaseCommand;
-    #endregion fields
+    private static readonly RoutedCommand _increaseCommand = new(nameof(IncreaseCommand), typeof(InputBaseUpDown));
+    private static readonly RoutedCommand _decreaseCommand = new(nameof(DecreaseCommand), typeof(InputBaseUpDown));
 
     /// <summary>
     /// Class constructor
     /// </summary>
     public InputBaseUpDown()
     {
-        InitializeCommands();
+        CommandManager.RegisterClassCommandBinding(
+            typeof(InputBaseUpDown), new CommandBinding(_increaseCommand, OnIncreaseCommand, OnCanIncreaseCommand));
+
+        CommandManager.RegisterClassInputBinding(
+            typeof(InputBaseUpDown), new InputBinding(_increaseCommand, new KeyGesture(Key.Up)));
+
+        CommandManager.RegisterClassCommandBinding(
+            typeof(InputBaseUpDown), new CommandBinding(_decreaseCommand, OnDecreaseCommand, OnCanDecreaseCommand));
     }
 
-    #region properties
     /// <summary>
     /// Expose the increase value command via <seealso cref="RoutedCommand"/> property.
     /// </summary>
-    public static RoutedCommand IncreaseCommand => _IncreaseCommand;
+    public static RoutedCommand IncreaseCommand => _increaseCommand;
 
     /// <summary>
     /// Expose the decrease value command via <seealso cref="RoutedCommand"/> property.
     /// </summary>
-    public static RoutedCommand DecreaseCommand => _DecreaseCommand;
+    public static RoutedCommand DecreaseCommand => _decreaseCommand;
 
     /// <summary>
     /// Determines whether the textbox portion of the control is editable
@@ -120,10 +121,6 @@ public abstract class InputBaseUpDown : Control
         set => SetValue(NumberStyleProperty, value);
     }
 
-    #endregion properties
-
-    #region methods
-    #region Commands
     /// <summary>
     /// Increase the displayed integer value
     /// </summary>
@@ -143,24 +140,6 @@ public abstract class InputBaseUpDown : Control
     /// Determines whether the decrease command is available or not.
     /// </summary>
     protected abstract bool CanDecreaseCommand();
-
-    /// <summary>
-    /// Initialize up down/button commands and key gestures for up/down cursor keys
-    /// </summary>
-    private void InitializeCommands()
-    {
-        _IncreaseCommand = new RoutedCommand("IncreaseCommand", typeof(InputBaseUpDown));
-        CommandManager.RegisterClassCommandBinding(typeof(InputBaseUpDown),
-                                new CommandBinding(_IncreaseCommand, OnIncreaseCommand, OnCanIncreaseCommand));
-
-        CommandManager.RegisterClassInputBinding(typeof(InputBaseUpDown),
-                                new InputBinding(_IncreaseCommand, new KeyGesture(Key.Up)));
-
-        _DecreaseCommand = new RoutedCommand("DecreaseCommand", typeof(InputBaseUpDown));
-
-        CommandManager.RegisterClassCommandBinding(typeof(InputBaseUpDown),
-                                new CommandBinding(_DecreaseCommand, OnDecreaseCommand, OnCanDecreaseCommand));
-    }
 
     /// <summary>
     /// Determine whether the IncreaseCommand can be executed or not and return the result
@@ -221,6 +200,4 @@ public abstract class InputBaseUpDown : Control
             e.Handled = true;
         }
     }
-    #endregion
-    #endregion methods
 }

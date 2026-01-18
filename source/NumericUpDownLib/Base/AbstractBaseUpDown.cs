@@ -47,7 +47,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
     /// Set this value in the static constructor of an inheriting class if a different
     /// default format string is more appropriate in the context of that inheriting class.
     /// </summary>
-    protected static T _MinValue = default(T);
+    protected static T _MinValue = default;
 
     /// <summary>
     /// Gets/sets the default applicable maximum value
@@ -55,7 +55,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
     /// Set this value in the static constructor of an inheriting class if a different
     /// default format string is more appropriate in the context of that inheriting class.
     /// </summary>
-    protected static T _MaxValue = default(T);
+    protected static T _MaxValue = default;
 
     /// <summary>
     /// Dependency property backing store for the <see cref="IsIncDecButtonsVisible"/> property.
@@ -325,8 +325,8 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
     {
         if (cmd is RoutedCommand command)
             command.Execute(CommandParameter, CommandTarget);
-        else if (cmd != null)
-            cmd.Execute(CommandParameter);
+        else
+            cmd?.Execute(CommandParameter);
     }
 
     /// <summary>
@@ -551,26 +551,26 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
         set => SetValue(IsUpdateValueWhenLostFocusProperty, value);
     }
 
-    private bool _IsDataValid = true;
+    private bool _isDataValid = true;
 
     /// <summary>
     /// Gets/sets determines the input text is valid or not.
     /// </summary>
     public bool IsValueValid
     {
-        get => _IsDataValid;
+        get => _isDataValid;
         protected set
         {
-            if (_IsDataValid != value)
+            if (_isDataValid != value)
             {
-                _IsDataValid = value;
+                _isDataValid = value;
 
-                EditingColorBrush = _IsDataValid ?
+                EditingColorBrush = _isDataValid ?
                     new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Green) :
                     new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Red);
 
                 // FIX THE behavior when user input unsupported char like ghijk
-                if (EnableValidatingIndicator && !_IsDataValid)
+                if (EnableValidatingIndicator && !_isDataValid)
                 {
                     EditingVisibility = Visibility.Visible;
                 }
@@ -658,11 +658,8 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
             DataObject.AddPastingHandler(_PART_TextBox, textBox_TextPasted);
         }
 
-        if (_PART_DecrementButton != null)
-            _PART_DecrementButton.PreviewKeyDown += IncDecButton_PreviewKeyDown;
-
-        if (_PART_IncrementButton != null)
-            _PART_IncrementButton.PreviewKeyDown += IncDecButton_PreviewKeyDown;
+        _PART_DecrementButton?.PreviewKeyDown += IncDecButton_PreviewKeyDown;
+        _PART_IncrementButton?.PreviewKeyDown += IncDecButton_PreviewKeyDown;
 
         IsVisibleChanged += new DependencyPropertyChangedEventHandler(this_IsVisibleChanged);
     }
@@ -678,11 +675,12 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
 
         if (!MouseWheelEnabled)
             return;
-        if (e.Handled == false)
+
+        if (!e.Handled)
         {
             if (e.Delta != 0)
             {
-                if (e.Delta < 0 && CanDecreaseCommand() == true)
+                if (e.Delta < 0 && CanDecreaseCommand())
                 {
                     if (Keyboard.Modifiers == MouseWheelAccelaratorKey)
                     {
@@ -696,7 +694,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
                 }
                 else
                 {
-                    if (e.Delta > 0 && CanIncreaseCommand() == true)
+                    if (e.Delta > 0 && CanIncreaseCommand())
                     {
                         if (Keyboard.Modifiers == MouseWheelAccelaratorKey)
                         {
@@ -737,7 +735,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
 
         if (_PART_TextBox != null)
         {
-            if ((bool)e.NewValue == false)
+            if (!(bool)e.NewValue)
                 _PART_TextBox.Cursor = Cursors.IBeam;
             else
                 _PART_TextBox.Cursor = Cursors.ScrollAll;
@@ -762,7 +760,6 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
             {
                 Keyboard.ClearFocus();
             }
-
             _objMouseIncr = null;
         }));
     }
@@ -799,10 +796,10 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
     /// <param name="e"></param>
     private void _PART_TextBox_MouseUp(object sender, MouseButtonEventArgs e)
     {
-        if (IsMouseDragEnabled == false)
+        if (!IsMouseDragEnabled)
             return;
 
-        if (_objMouseIncr != null && IsReadOnly == false)
+        if (_objMouseIncr != null && !IsReadOnly)
         {
             var mouseUpPosition = GetPositionFromThis(e);
             if (_objMouseIncr.InitialPoint.Equals(mouseUpPosition))
@@ -817,10 +814,10 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
 
     private void _PART_TextBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)
     {
-        if (IsMouseDragEnabled == false)
+        if (!IsMouseDragEnabled)
             return;
 
-        if (IsKeyboardFocusWithin == false)
+        if (!IsKeyboardFocusWithin)
         {
             _objMouseIncr = new MouseIncrementor(GetPositionFromThis(e), MouseDirections.None);
             e.Handled = true;
@@ -829,7 +826,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
 
     private void _PART_TextBox_MouseMove(object sender, MouseEventArgs e)
     {
-        if (IsMouseDragEnabled == false)
+        if (!IsMouseDragEnabled)
             return;
 
         // nothing to do here
@@ -839,7 +836,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
         if (e.LeftButton != MouseButtonState.Pressed)
             return;
 
-        if (CanIncreaseCommand() == false && CanDecreaseCommand() == false)
+        if (!CanIncreaseCommand() && !CanDecreaseCommand())
         {
             // since we can't parse the value, we are out of here, i.e. user put text in our number box
             _objMouseIncr = null;
@@ -876,14 +873,14 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
             {
                 if (deltaY > 0)
                 {
-                    if (CanIncreaseCommand() == true)
+                    if (CanIncreaseCommand())
                         OnIncrease();
                 }
                 else
                 {
                     if (deltaY < 0)
                     {
-                        if (CanDecreaseCommand() == true)
+                        if (CanDecreaseCommand())
                             OnDecrease();
                     }
                 }
@@ -906,7 +903,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
     /// <param name="e"></param>
     private void _PART_TextBox_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
     {
-        if (IsMouseDragEnabled == false)
+        if (!IsMouseDragEnabled)
             return;
 
         _objMouseIncr = null;
@@ -921,7 +918,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
     /// <param name="e"></param>
     private void _PART_TextBox_MouseEnter(object sender, MouseEventArgs e)
     {
-        if (IsMouseDragEnabled == false)
+        if (!IsMouseDragEnabled)
             return;
 
         if (IsKeyboardFocusWithin)
@@ -944,7 +941,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
     private void _PART_TextBox_GotFocus(object sender, RoutedEventArgs e)
     {
         _objMouseIncr = null;
-        if (SelectAllTextOnFocus == true)
+        if (SelectAllTextOnFocus)
         {
             if (sender is TextBox tb)
                 tb.SelectAll();
@@ -953,7 +950,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
 
     private void _PART_TextBox_LostFocus(object sender, RoutedEventArgs e)
     {
-        if (IsMouseDragEnabled == true)
+        if (IsMouseDragEnabled)
         {
             _objMouseIncr = null;
             (sender as TextBox).Cursor = Cursors.ScrollAll;
@@ -991,7 +988,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
     {
         if (_PART_TextBox != null)
         {
-            if (UserInput == true)
+            if (UserInput)
             {
                 T temp = LastEditingNumericValue;
                 IsValueValid = VerifyText(_PART_TextBox.Text, ref temp);
@@ -1024,7 +1021,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
     /// <param name="e"></param>
     private void textBox_TextPasted(object sender, DataObjectPastingEventArgs e)
     {
-        if (e.SourceDataObject.GetDataPresent(DataFormats.Text, true) == false)
+        if (!e.SourceDataObject.GetDataPresent(DataFormats.Text, true))
         {
             return;
         }
@@ -1064,9 +1061,9 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
         }
 
         // support small value change via up cursor key
-        if (e.Key == Key.Up && IsModifierKeyDown() == false)
+        if (e.Key == Key.Up && !IsModifierKeyDown())
         {
-            if (CanIncreaseCommand() == true)
+            if (CanIncreaseCommand())
                 IncreaseCommand.Execute(null, this);
 
             e.Handled = true;
@@ -1074,9 +1071,9 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
         }
 
         // support small value change via down cursor key
-        if (e.Key == Key.Down && IsModifierKeyDown() == false)
+        if (e.Key == Key.Down && !IsModifierKeyDown())
         {
-            if (CanDecreaseCommand() == true)
+            if (CanDecreaseCommand())
                 DecreaseCommand.Execute(null, this);
 
             e.Handled = true;
@@ -1086,7 +1083,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
         if (IsLargeStepEnabled)
         {
             // support large value change via right cursor key
-            if (e.Key == Key.Right && IsModifierKeyDown() == false)
+            if (e.Key == Key.Right && !IsModifierKeyDown())
             {
                 OnIncrement(LargeStepSize);
                 e.Handled = true;
@@ -1094,7 +1091,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
             }
 
             // support large value change via left cursor key
-            if (e.Key == Key.Left && IsModifierKeyDown() == false)
+            if (e.Key == Key.Left && !IsModifierKeyDown())
             {
                 OnDecrement(LargeStepSize);
                 e.Handled = true;
@@ -1141,7 +1138,6 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
                Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt);
     }
 
-
     /// <summary>
     /// Gets a formatted string for the value of the number passed in
     /// and ensures that a default string is returned even if there is
@@ -1154,7 +1150,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
     {
         string format = "{0}";
         var form = (string)GetValue(FormatStringProperty);
-        if (string.IsNullOrEmpty(FormatString) == false)
+        if (!string.IsNullOrEmpty(FormatString))
         {
             format = !FormatString.StartsWith("{")
                 ? "{0:" + FormatString + "}"
@@ -1409,7 +1405,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
         {
             UserControl.ClearValue(MaxWidthProperty);
 
-            if (SetBinding == true && MeasuringControl != null)
+            if (SetBinding && MeasuringControl != null)
             {
                 var binding = new Binding
                 {
@@ -1432,8 +1428,8 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
     /// <param name="e"></param>
     private static void OnIsDisplayLengthFixedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is AbstractBaseUpDown<T> control && e.NewValue is bool)
-            control.BindMeasuringObject((bool)e.NewValue);
+        if (d is AbstractBaseUpDown<T> control && e.NewValue is bool b)
+            control.BindMeasuringObject(b);
     }
     #endregion DisplayLength IsDisplayLengthFixed
     #endregion methods DisplayLength IsDisplayLengthFixed

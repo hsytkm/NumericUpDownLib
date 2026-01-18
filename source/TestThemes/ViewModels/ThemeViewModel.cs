@@ -65,13 +65,11 @@ public class ThemeViewModel : Base.ViewModelBase
         {
             if (_SelectedTheme != value)
             {
-                if (_SelectedTheme != null)
-                    _SelectedTheme.IsSelected = false;
+                _SelectedTheme?.IsSelected = false;
 
                 _SelectedTheme = value;
 
-                if (_SelectedTheme != null)
-                    _SelectedTheme.IsSelected = true;
+                _SelectedTheme?.IsSelected = true;
 
                 NotifyPropertyChanged(() => SelectedTheme);
             }
@@ -145,7 +143,7 @@ public class ThemeViewModel : Base.ViewModelBase
             }
 
             // This may be black on Windows 7 and the experience is black & white then :-(
-            if (AccentColor == default(Color) || AccentColor == Colors.Black || AccentColor.A == 0)
+            if (AccentColor == default || AccentColor == Colors.Black || AccentColor.A == 0)
                 AccentColor = Color.FromRgb(0x1b, 0xa1, 0xe2);
         }
         else

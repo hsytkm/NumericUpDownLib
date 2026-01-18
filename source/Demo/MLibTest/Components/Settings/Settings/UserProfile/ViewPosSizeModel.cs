@@ -191,7 +191,7 @@ public class ViewPosSizeModel : Interfaces.IViewPosSizeModel
         view.Top = Y;
         view.Width = Width;
         view.Height = Height;
-        view.WindowState = IsMaximized == true ? WindowState.Maximized : WindowState.Normal;
+        view.WindowState = IsMaximized ? WindowState.Maximized : WindowState.Normal;
     }
 
     /// <summary>

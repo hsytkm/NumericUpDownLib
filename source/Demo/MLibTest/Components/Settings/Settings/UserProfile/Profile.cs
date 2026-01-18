@@ -102,9 +102,9 @@ public class Profile : IProfile
         }
         else
         {
-            if (WindowPosSz.TryGetValue(MainWindowName, out var win) == true)
+            if (WindowPosSz.TryGetValue(MainWindowName, out var win))
             {
-                if (win.DefaultConstruct == true)
+                if (win.DefaultConstruct)
                 {
                     WindowPosSz.Remove(MainWindowName);
                     WindowPosSz.Add(MainWindowName, defaultWindow);
@@ -125,7 +125,7 @@ public class Profile : IProfile
     /// <returns></returns>
     public void UpdateInsertWindowPosSize(string windowName, ViewPosSizeModel model)
     {
-        if (WindowPosSz.TryGetValue(windowName, out var checkModel) == true)
+        if (WindowPosSz.TryGetValue(windowName, out var checkModel))
             WindowPosSz.Remove(windowName);
 
         WindowPosSz.Add(windowName, model);

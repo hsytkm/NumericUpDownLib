@@ -211,7 +211,7 @@ public partial class App : Application
             {
                 if (MainWindow is IMetroWindow MainWindowCanClose)
                 {
-                    if (MainWindowCanClose.IsContentDialogVisible == true)
+                    if (MainWindowCanClose.IsContentDialogVisible)
                     {
                         e.Cancel = true;     // Lets not close with open dialog
                         return;
@@ -219,7 +219,7 @@ public partial class App : Application
                 }
 
                 // Close all open files and check whether application is ready to close
-                if (wsVM.AppLifeCycle.Exit_CheckConditions(wsVM) == true)
+                if (wsVM.AppLifeCycle.Exit_CheckConditions(wsVM))
                 {
                     // (other than exception and error handling)
                     wsVM.AppLifeCycle.OnRequestClose(true);

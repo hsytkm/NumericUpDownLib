@@ -1,5 +1,4 @@
-﻿#nullable disable
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
@@ -14,33 +13,18 @@ namespace NumericUpDownLib.Converters;
 [ValueConversion(typeof(bool), typeof(Visibility))]
 public sealed class BoolToVisibilityPropConverter : IValueConverter
 {
-    #region constructor
-    /// <summary>
-    /// Class constructor
-    /// </summary>
-    public BoolToVisibilityPropConverter()
-    {
-        // set defaults
-        TrueValue = Visibility.Visible;
-        FalseValue = Visibility.Collapsed;
-    }
-    #endregion constructor
-
-    #region properties
     /// <summary>
     /// Gets/sets the <see cref="Visibility"/> value that is associated
     /// (converted into) with the boolean true value.
     /// </summary>
-    public Visibility TrueValue { get; set; }
+    public Visibility TrueValue { get; set; } = Visibility.Visible;
 
     /// <summary>
     /// Gets/sets the <see cref="Visibility"/> value that is associated
     /// (converted into) with the boolean false value.
     /// </summary>
-    public Visibility FalseValue { get; set; }
-    #endregion properties
+    public Visibility FalseValue { get; set; } = Visibility.Collapsed;
 
-    #region methods
     /// <summary>
     /// Convertzs a bool value into <see cref="Visibility"/> as configured in the
     /// <see cref="TrueValue"/> and <see cref="FalseValue"/> properties.
@@ -50,7 +34,7 @@ public sealed class BoolToVisibilityPropConverter : IValueConverter
     /// <param name="parameter"></param>
     /// <param name="culture"></param>
     /// <returns></returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is not bool)
             return null;
@@ -66,7 +50,7 @@ public sealed class BoolToVisibilityPropConverter : IValueConverter
     /// <param name="parameter"></param>
     /// <param name="culture"></param>
     /// <returns></returns>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (Equals(value, TrueValue))
             return true;
@@ -76,5 +60,4 @@ public sealed class BoolToVisibilityPropConverter : IValueConverter
 
         return null;
     }
-    #endregion methods
 }

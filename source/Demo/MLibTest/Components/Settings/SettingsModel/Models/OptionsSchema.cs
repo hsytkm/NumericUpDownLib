@@ -147,7 +147,7 @@ internal sealed class OptionsSchema : IOptionsSchema
     {
         if (SchemaType == OptionSchemaType.List)
         {
-            if (_mValues.TryGetValue(newValue, out var checkValue) == true)
+            if (_mValues.TryGetValue(newValue, out var checkValue))
                 return false;
 
             _mValues.Add(newValue, newValue);
@@ -177,7 +177,7 @@ internal sealed class OptionsSchema : IOptionsSchema
         if (SchemaType == OptionSchemaType.List)
         {
             // Remove key if item exists and re-add below
-            if (_mValues.TryGetValue(name, out var checkValue) == true)
+            if (_mValues.TryGetValue(name, out var checkValue))
                 _mValues.Remove(name);
 
             _mValues.Add(name, value);

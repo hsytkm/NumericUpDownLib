@@ -218,7 +218,7 @@ public class AppLifeCycleViewModel : Base.ViewModelBase
     {
         try
         {
-            if (Closing_CanExecute() == true)
+            if (Closing_CanExecute())
             {
                 mShutDownInProgress_Cancel = false;
                 OnRequestClose();
@@ -249,7 +249,7 @@ public class AppLifeCycleViewModel : Base.ViewModelBase
         //// var msg = ServiceLocator.ServiceContainer.Instance.GetService<IMessageBoxService>();
         try
         {
-            if (mShutDownInProgress == true)
+            if (mShutDownInProgress)
                 return true;
 
             // this return is normally computed if there are documents open with unsaved data
@@ -293,14 +293,14 @@ public class AppLifeCycleViewModel : Base.ViewModelBase
     {
         try
         {
-            if (ShutDownAfterClosing == true)
+            if (ShutDownAfterClosing)
             {
-                if (mShutDownInProgress == false)
+                if (!mShutDownInProgress)
                 {
                     if (DialogCloseResult == null)
                         DialogCloseResult = true;      // Execute Closing event via attached property
 
-                    if (mShutDownInProgress_Cancel == true)
+                    if (mShutDownInProgress_Cancel)
                     {
                         mShutDownInProgress = false;
                         mShutDownInProgress_Cancel = false;

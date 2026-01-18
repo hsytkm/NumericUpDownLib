@@ -178,8 +178,7 @@ internal class SettingsManagerImpl : ISettingsManager
                 finally
                 {
                     // Cleanup
-                    if (readFileStream != null)
-                        readFileStream.Close();
+                    readFileStream?.Close();
                 }
             }
 
@@ -227,8 +226,7 @@ internal class SettingsManagerImpl : ISettingsManager
         }
         finally
         {
-            if (xw != null)
-                xw.Close(); // Cleanup
+            xw?.Close(); // Cleanup
 
         }
     }

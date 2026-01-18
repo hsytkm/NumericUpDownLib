@@ -10,11 +10,11 @@ namespace UpDownDemoLib.ViewModels;
 public abstract class BaseUpDownViewModel<T> : Base.ViewModelBase
 {
     #region fields
-    private T? _Value = default(T);
-    private T? _MinimumValue = default(T);
-    private T? _MaximumValue = default(T);
-    private T? _StepSize = default(T);
-    private T? _LargeStepSize = default(T);
+    private T? _Value = default;
+    private T? _MinimumValue = default;
+    private T? _MaximumValue = default;
+    private T? _StepSize = default;
+    private T? _LargeStepSize = default;
     private ModifierKeys _AccelModifierKeys = ModifierKeys.Control;
 
     private bool _IsHexDisplayEnabled = false;
@@ -42,7 +42,7 @@ public abstract class BaseUpDownViewModel<T> : Base.ViewModelBase
 
         set
         {
-            if (Compare(_Value, value) == false)
+            if (!Compare(_Value, value))
             {
                 _Value = value;
                 NotifyPropertyChanged(() => Value);
@@ -61,7 +61,7 @@ public abstract class BaseUpDownViewModel<T> : Base.ViewModelBase
 
         set
         {
-            if (Compare(_StepSize, value) == false)
+            if (!Compare(_StepSize, value))
             {
                 _StepSize = value;
                 NotifyPropertyChanged(() => StepSize);
@@ -80,7 +80,7 @@ public abstract class BaseUpDownViewModel<T> : Base.ViewModelBase
 
         set
         {
-            if (Compare(_LargeStepSize, value) == false)
+            if (!Compare(_LargeStepSize, value))
             {
                 _LargeStepSize = value;
                 NotifyPropertyChanged(() => LargeStepSize);
@@ -97,7 +97,7 @@ public abstract class BaseUpDownViewModel<T> : Base.ViewModelBase
 
         set
         {
-            if (Compare(_MinimumValue, value) == false)
+            if (!Compare(_MinimumValue, value))
             {
                 _MinimumValue = value;
                 NotifyPropertyChanged(() => MinimumValue);
@@ -114,7 +114,7 @@ public abstract class BaseUpDownViewModel<T> : Base.ViewModelBase
 
         set
         {
-            if (Compare(_MaximumValue, value) == false)
+            if (!Compare(_MaximumValue, value))
             {
                 _MaximumValue = value;
                 NotifyPropertyChanged(() => MaximumValue);

@@ -94,10 +94,10 @@ internal class OptionsEngine : IEngine
     {
         string message;
 
-        if (string.IsNullOrEmpty(message = CheckForValidName(nameOfOptionGroup)) == false)
+        if (!string.IsNullOrEmpty(message = CheckForValidName(nameOfOptionGroup)))
             throw new Exception(message);
 
-        if (string.IsNullOrEmpty(message = CheckForValidName(optionName)) == false)
+        if (!string.IsNullOrEmpty(message = CheckForValidName(optionName)))
             throw new Exception(message);
 
         var option = _optionGroups.TryGetValue(nameOfOptionGroup, out var opgroup);
@@ -178,7 +178,7 @@ internal class OptionsEngine : IEngine
     public object GetOptionValue(string nameOfOptionGroup, string optionName)
     {
 
-        if (GetOptionValue(nameOfOptionGroup, optionName, out var optValue) == false)
+        if (!GetOptionValue(nameOfOptionGroup, optionName, out var optValue))
             throw new Exception(string.Format("The application option {0}-{1} cannot be located.",
                                               nameOfOptionGroup, optionName));
 
@@ -198,7 +198,7 @@ internal class OptionsEngine : IEngine
     {
         object optValue = GetOptionValue(nameOfOptionGroup, optionName);
 
-        if ((optValue is T) == false)
+        if (optValue is not T)
             throw new Exception(string.Format("The requested option {0}-{1} is not of requested type <T>.",
                                               nameOfOptionGroup, optionName));
 
@@ -245,7 +245,7 @@ internal class OptionsEngine : IEngine
     public IOptionGroup GetOptionGroup(string nameOfOptionGroup)
     {
 
-        if (_optionGroups.TryGetValue(nameOfOptionGroup, out var result) == false)
+        if (!_optionGroups.TryGetValue(nameOfOptionGroup, out var result))
             return null;
 
         return result;
@@ -279,7 +279,7 @@ internal class OptionsEngine : IEngine
     /// <returns></returns>
     bool IEngine.RemoveOptionsGroup(string nameOfOptionGroup)
     {
-        if (_optionGroups.TryGetValue(nameOfOptionGroup, out var opgroup) == false)
+        if (!_optionGroups.TryGetValue(nameOfOptionGroup, out var opgroup))
             return false;
 
         _optionGroups.Remove(nameOfOptionGroup);
@@ -301,7 +301,7 @@ internal class OptionsEngine : IEngine
     /// <returns></returns>
     bool IEngine.RemoveOption(string nameOfOptionGroup, string optionName)
     {
-        if (_optionGroups.TryGetValue(nameOfOptionGroup, out var opgroup) == false)
+        if (!_optionGroups.TryGetValue(nameOfOptionGroup, out var opgroup))
             return false;
 
         return opgroup.RemoveOptionDefinition(optionName);
@@ -379,7 +379,7 @@ internal class OptionsEngine : IEngine
     /// <returns></returns>
     private string CheckForValidName(string name)
     {
-        if (string.IsNullOrEmpty(name) == true)
+        if (string.IsNullOrEmpty(name))
             return string.Format("The '{0}' name cannot be empty or null", name);
 
         foreach (var item in XMLLayer.ResvedOptionListCharacters)

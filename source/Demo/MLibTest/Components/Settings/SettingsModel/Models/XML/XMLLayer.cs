@@ -71,7 +71,7 @@ internal class XMLLayer
     {
         try
         {
-            if (File.Exists(fileName) == false)
+            if (!File.Exists(fileName))
                 return;
 
             // Do this conversion to generate an implecite schema
@@ -200,7 +200,7 @@ internal class XMLLayer
             IOptionGroup optionsGroup = FindOptionsGroup(engine, table.TableName, out var optionName);
 
             // Found a table that refers to a list of values stored in an optiongroup/option
-            if (string.IsNullOrEmpty(optionName) == false)
+            if (!string.IsNullOrEmpty(optionName))
             {
                 // Empty list is allowed but requires no processing
                 // -> remove defaults if actual data is available
@@ -295,7 +295,7 @@ internal class XMLLayer
 
         foreach (var item in columnSchema.List_GetListOfValues())
         {
-            if (IsFirstRow == true)
+            if (IsFirstRow)
             {
                 IsFirstRow = false;
 
@@ -341,7 +341,7 @@ internal class XMLLayer
         // Search for options group that has this field name as reference to this list
         if (optionsGroup == null)
         {
-            if (TryResolveOptionsGroupAndOptionName(tableName, out var groupName, out optionName) == true)
+            if (TryResolveOptionsGroupAndOptionName(tableName, out var groupName, out optionName))
                 throw new Exception(string.Format("Unknown item detected. Cannot resolve {0}.", tableName));
 
             optionsGroup = engine.GetOptionGroup(groupName);
@@ -381,10 +381,10 @@ internal class XMLLayer
 
         foreach (var item in items)
         {
-            if (string.IsNullOrEmpty(item) == true)
+            if (string.IsNullOrEmpty(item))
                 continue;
 
-            if (string.IsNullOrEmpty(groupName) == true)
+            if (string.IsNullOrEmpty(groupName))
             {
                 groupName = item;
                 continue;
@@ -393,7 +393,7 @@ internal class XMLLayer
             {
                 // We resolved more parts of the equation than required
                 // (information if not formatted correctly)
-                if (string.IsNullOrEmpty(optionName) == false)
+                if (!string.IsNullOrEmpty(optionName))
                     throw new NotSupportedException(name);
 
                 optionName = item;
@@ -402,7 +402,7 @@ internal class XMLLayer
         }
 
         // We could resolve none or not all parts of the equation
-        if (string.IsNullOrEmpty(optionName) == true || string.IsNullOrEmpty(groupName) == true)
+        if (string.IsNullOrEmpty(optionName) || string.IsNullOrEmpty(groupName))
             throw new NotSupportedException(name);
 
         return false;

@@ -21,7 +21,7 @@ public class LanguageCollection
     {
         get
         {
-            if (string.IsNullOrEmpty(Locale) == false)
+            if (!string.IsNullOrEmpty(Locale))
                 return string.Format("{0}-{1}", Language, Locale);
             else
                 return string.Format("{0}", Language);

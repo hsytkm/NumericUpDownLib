@@ -71,7 +71,7 @@ public class AppCore
     {
         try
         {
-            if (System.IO.Directory.Exists(DirAppData) == false)
+            if (!System.IO.Directory.Exists(DirAppData))
                 System.IO.Directory.CreateDirectory(DirAppData);
         }
         catch

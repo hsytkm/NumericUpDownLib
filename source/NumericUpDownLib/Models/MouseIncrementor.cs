@@ -1,5 +1,4 @@
-﻿#nullable disable
-using System.Windows;
+﻿using System.Windows;
 
 namespace NumericUpDownLib.Models;
 
@@ -10,14 +9,10 @@ namespace NumericUpDownLib.Models;
 /// </summary>
 internal class MouseIncrementor
 {
-    #region fields
     private MouseDirections _enumMouseDirection = MouseDirections.None;
     private Point _objPoint;
-
     private readonly Point _initialPoint;
-    #endregion fields
 
-    #region Ctors
     /// <summary>
     /// Class constructor
     /// </summary>
@@ -29,9 +24,7 @@ internal class MouseIncrementor
         _initialPoint = _objPoint;
         _enumMouseDirection = enumMouseDirection;
     }
-    #endregion Ctors
 
-    #region properties
     /// <summary>
     /// Gets/sets the direction in which a mouse was seen to be moved
     /// when comparing 2 points.
@@ -39,7 +32,6 @@ internal class MouseIncrementor
     public MouseDirections MouseDirection
     {
         get => _enumMouseDirection;
-
         protected set => _enumMouseDirection = value;
     }
 
@@ -56,7 +48,6 @@ internal class MouseIncrementor
     public Point Point
     {
         get => _objPoint;
-
         set => _objPoint = value;
     }
 
@@ -82,5 +73,4 @@ internal class MouseIncrementor
 
         return MouseDirection;
     }
-    #endregion properties
 }

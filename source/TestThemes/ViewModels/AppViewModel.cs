@@ -67,7 +67,7 @@ public class AppViewModel : ViewModelBase, IDisposable
             {
                 _ThemeSelectionChangedCommand = new RelayCommand<object>((p) =>
                 {
-                    if (mDisposed == true)
+                    if (mDisposed)
                         return;
 
 
@@ -173,7 +173,7 @@ public class AppViewModel : ViewModelBase, IDisposable
     {
         lock (_lockObject)
         {
-            if (_isInitialized == true)
+            if (_isInitialized)
                 throw new Exception("AppViewModel initizialized twice.");
 
             _isInitialized = true;
@@ -215,9 +215,9 @@ public class AppViewModel : ViewModelBase, IDisposable
     /// <param name="disposing"></param>
     protected virtual void Dispose(bool disposing)
     {
-        if (mDisposed == false)
+        if (!mDisposed)
         {
-            if (disposing == true)
+            if (disposing)
             {
                 // Dispose of the curently displayed content
                 ////mContent.Dispose();
