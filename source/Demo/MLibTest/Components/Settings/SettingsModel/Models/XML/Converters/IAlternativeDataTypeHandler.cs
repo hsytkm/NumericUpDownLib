@@ -1,13 +1,12 @@
-﻿namespace SettingsModel.Models.XML.Converters
+﻿namespace SettingsModel.Models.XML.Converters;
+
+using System;
+
+internal interface IAlternativeDataTypeHandler
 {
-    using System;
+    Type SourceDataType { get; }
+    Type TargetDataType { get; }
 
-    internal interface IAlternativeDataTypeHandler
-    {
-        Type SourceDataType { get; }
-        Type TargetDataType { get; }
-
-        object Convert(object objectInput);
-        object ConvertBack(object objectEncryptedData);
-    }
+    object Convert(object objectInput);
+    object ConvertBack(object objectEncryptedData);
 }

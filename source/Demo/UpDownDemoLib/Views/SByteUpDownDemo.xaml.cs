@@ -1,15 +1,14 @@
-﻿namespace UpDownDemoLib.Views
-{
-    using System.Windows.Controls;
+﻿namespace UpDownDemoLib.Views;
 
-    /// <summary>
-    /// Interaction logic for DoubleUpDownDemo.xaml
-    /// </summary>
-    public partial class SByteUpDownDemo : UserControl
+using System.Windows.Controls;
+
+/// <summary>
+/// Interaction logic for DoubleUpDownDemo.xaml
+/// </summary>
+public partial class SByteUpDownDemo : UserControl
+{
+    public SByteUpDownDemo()
     {
-        public SByteUpDownDemo()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

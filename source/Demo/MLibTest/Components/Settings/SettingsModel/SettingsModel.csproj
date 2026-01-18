@@ -4,6 +4,12 @@
     <TargetFramework>net48</TargetFramework>
     <UseWPF>true</UseWPF>
     <OutputType>Library</OutputType>
+
+    <!--
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    -->
+    <LangVersion>14</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

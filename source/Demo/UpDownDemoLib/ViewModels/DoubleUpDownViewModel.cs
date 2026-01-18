@@ -1,44 +1,43 @@
-﻿namespace UpDownDemoLib.Demos.ViewModels
+﻿namespace UpDownDemoLib.Demos.ViewModels;
+
+using UpDownDemoLib.ViewModels;
+
+/// <summary>
+/// Implements an <see cref="double"/>  based demo viewmodel that can be used
+/// to drive an integer base numeric up down control.
+/// </summary>
+public class DoubleUpDownViewModel : BaseUpDownViewModel<double>
 {
-    using UpDownDemoLib.ViewModels;
-
     /// <summary>
-    /// Implements an <see cref="double"/>  based demo viewmodel that can be used
-    /// to drive an integer base numeric up down control.
+    /// Class constructor
     /// </summary>
-    public class DoubleUpDownViewModel : BaseUpDownViewModel<double>
+    /// <param name="value"></param>
+    /// <param name="minimumValue"></param>
+    /// <param name="maximumValue"></param>
+    /// <param name="stepSize"></param>
+    /// <param name="largestepSize"></param>
+    public DoubleUpDownViewModel(double value,
+                                 double minimumValue,
+                                 double maximumValue,
+                                 double stepSize,
+                                 double largestepSize
+        )
+        : base()
     {
-        /// <summary>
-        /// Class constructor
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="minimumValue"></param>
-        /// <param name="maximumValue"></param>
-        /// <param name="stepSize"></param>
-        /// <param name="largestepSize"></param>
-        public DoubleUpDownViewModel(double value,
-                                     double minimumValue,
-                                     double maximumValue,
-                                     double stepSize,
-                                     double largestepSize
-            )
-            : base()
-        {
-            base.Value = value;
-            base.MinimumValue = minimumValue;
-            base.MaximumValue = maximumValue;
-            base.StepSize = stepSize;
-            base.LargeStepSize = largestepSize;
+        base.Value = value;
+        base.MinimumValue = minimumValue;
+        base.MaximumValue = maximumValue;
+        base.StepSize = stepSize;
+        base.LargeStepSize = largestepSize;
 
-            FormatString = "F4";
-        }
+        FormatString = "F4";
+    }
 
-        /// Method determine whether two objects of type {T} are equal.
-        /// 
-        /// Returns false if both objects are in-equal, otherwise true.
-        public override bool Compare(double intValue, double intValue1)
-        {
-            return double.Equals(intValue, intValue1);
-        }
+    /// Method determine whether two objects of type {T} are equal.
+    /// 
+    /// Returns false if both objects are in-equal, otherwise true.
+    public override bool Compare(double intValue, double intValue1)
+    {
+        return Equals(intValue, intValue1);
     }
 }

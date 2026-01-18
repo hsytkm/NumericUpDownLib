@@ -1,54 +1,53 @@
-﻿namespace TestThemes.ViewModels.Base
+﻿namespace TestThemes.ViewModels.Base;
+
+using System;
+using System.ComponentModel;
+using System.Linq.Expressions;
+
+/// <summary>
+/// Implements a base class for all viewmodel classes
+/// that implements <seealso cref="INotifyPropertyChanged"/> interface for binding.
+/// </summary>
+public class ViewModelBase : ModelBase, INotifyPropertyChanged
 {
-    using System;
-    using System.ComponentModel;
-    using System.Linq.Expressions;
+    /// <summary>
+    /// Standard implementation of <seealso cref="INotifyPropertyChanged"/>.
+    /// </summary>
+    public event PropertyChangedEventHandler PropertyChanged;
 
     /// <summary>
-    /// Implements a base class for all viewmodel classes
-    /// that implements <seealso cref="INotifyPropertyChanged"/> interface for binding.
+    /// Tell bound controls (via WPF binding) to refresh their display.
+    /// 
+    /// Sample call: this.NotifyPropertyChanged(() => this.IsSelected);
+    /// where 'this' is derived from <seealso cref="ViewModelBase"/>
+    /// and IsSelected is a property.
     /// </summary>
-    public class ViewModelBase : ModelBase, INotifyPropertyChanged
+    /// <typeparam name="TProperty"></typeparam>
+    /// <param name="property"></param>
+    public void NotifyPropertyChanged<TProperty>(Expression<Func<TProperty>> property)
     {
-        /// <summary>
-        /// Standard implementation of <seealso cref="INotifyPropertyChanged"/>.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        var lambda = (LambdaExpression)property;
+        MemberExpression memberExpression;
 
-        /// <summary>
-        /// Tell bound controls (via WPF binding) to refresh their display.
-        /// 
-        /// Sample call: this.NotifyPropertyChanged(() => this.IsSelected);
-        /// where 'this' is derived from <seealso cref="ViewModelBase"/>
-        /// and IsSelected is a property.
-        /// </summary>
-        /// <typeparam name="TProperty"></typeparam>
-        /// <param name="property"></param>
-        public void NotifyPropertyChanged<TProperty>(Expression<Func<TProperty>> property)
+        if (lambda.Body is UnaryExpression)
         {
-            var lambda = (LambdaExpression)property;
-            MemberExpression memberExpression;
-
-            if (lambda.Body is UnaryExpression)
-            {
-                var unaryExpression = (UnaryExpression)lambda.Body;
-                memberExpression = (MemberExpression)unaryExpression.Operand;
-            }
-            else
-                memberExpression = (MemberExpression)lambda.Body;
-
-            this.NotifyPropertyChanged(memberExpression.Member.Name);
+            var unaryExpression = (UnaryExpression)lambda.Body;
+            memberExpression = (MemberExpression)unaryExpression.Operand;
         }
+        else
+            memberExpression = (MemberExpression)lambda.Body;
 
-        /// <summary>
-        /// Tell bound controls (via WPF binding) to refresh their display.
-        /// Standard implementation through <seealso cref="INotifyPropertyChanged"/>.
-        /// </summary>
-        /// <param name="propertyName"></param>
-        protected virtual void NotifyPropertyChanged(string propertyName)
-        {
-            if (this.PropertyChanged != null)
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
+        NotifyPropertyChanged(memberExpression.Member.Name);
+    }
+
+    /// <summary>
+    /// Tell bound controls (via WPF binding) to refresh their display.
+    /// Standard implementation through <seealso cref="INotifyPropertyChanged"/>.
+    /// </summary>
+    /// <param name="propertyName"></param>
+    protected virtual void NotifyPropertyChanged(string propertyName)
+    {
+        if (PropertyChanged != null)
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
     }
 }

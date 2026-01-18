@@ -1,174 +1,157 @@
-﻿namespace TestThemes.ViewModels
+﻿namespace TestThemes.ViewModels;
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
+using System.Windows.Media;
+using MLib.Interfaces;
+using Settings.Interfaces;
+
+/// <summary>
+/// ViewModel class that manages theme properties for binding and display in WPF UI.
+/// </summary>
+public class ThemeViewModel : Base.ViewModelBase
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Windows;
-    using System.Windows.Media;
-    using MLib.Interfaces;
-    using Settings.Interfaces;
+    #region private fields
+    private readonly ThemeDefinitionViewModel _DefaultTheme = null;
+    private Dictionary<string, ThemeDefinitionViewModel> _ListOfThemes = null;
+    private ThemeDefinitionViewModel _SelectedTheme = null;
+    private bool _IsEnabled = true;
+    #endregion private fields
+
+    #region constructors
+    /// <summary>
+    /// Standard Constructor
+    /// </summary>
+    public ThemeViewModel()
+    {
+        var settings = GetService<ISettingsManager>(); // add the default themes
+
+        _ListOfThemes = new Dictionary<string, ThemeDefinitionViewModel>();
+
+        foreach (var item in settings.Themes.GetThemeInfos())
+        {
+            _ListOfThemes.Add(item.DisplayName, new ThemeDefinitionViewModel(item));
+        }
+
+        // Lets make sure there is a default
+        _ListOfThemes.TryGetValue(GetService<IAppearanceManager>().GetDefaultTheme().DisplayName, out _DefaultTheme);
+
+        // and something sensible is selected
+        _SelectedTheme = _DefaultTheme;
+        _SelectedTheme.IsSelected = true;
+    }
+    #endregion constructors
+
+    #region properties
+    /// <summary>
+    /// Returns a default theme that should be applied when nothing else is available.
+    /// </summary>
+    public ThemeDefinitionViewModel DefaultTheme => _DefaultTheme;
 
     /// <summary>
-    /// ViewModel class that manages theme properties for binding and display in WPF UI.
+    /// Returns a list of theme definitons.
     /// </summary>
-    public class ThemeViewModel : Base.ViewModelBase
+    public List<ThemeDefinitionViewModel> ListOfThemes => _ListOfThemes.Select(it => it.Value).ToList();
+
+    /// <summary>
+    /// Gets the currently selected theme (or desfault on applaiction start-up)
+    /// </summary>
+    public ThemeDefinitionViewModel SelectedTheme
     {
-        #region private fields
-        private readonly ThemeDefinitionViewModel _DefaultTheme = null;
-        private Dictionary<string, ThemeDefinitionViewModel> _ListOfThemes = null;
-        private ThemeDefinitionViewModel _SelectedTheme = null;
-        private bool _IsEnabled = true;
-        #endregion private fields
+        get => _SelectedTheme;
 
-        #region constructors
-        /// <summary>
-        /// Standard Constructor
-        /// </summary>
-        public ThemeViewModel()
+        private set
         {
-            var settings = GetService<ISettingsManager>(); // add the default themes
-
-            _ListOfThemes = new Dictionary<string, ThemeDefinitionViewModel>();
-
-            foreach (var item in settings.Themes.GetThemeInfos())
+            if (_SelectedTheme != value)
             {
-                _ListOfThemes.Add(item.DisplayName, new ThemeDefinitionViewModel(item));
-            }
+                if (_SelectedTheme != null)
+                    _SelectedTheme.IsSelected = false;
 
-            // Lets make sure there is a default
-            _ListOfThemes.TryGetValue(GetService<IAppearanceManager>().GetDefaultTheme().DisplayName, out _DefaultTheme);
+                _SelectedTheme = value;
 
-            // and something sensible is selected
-            _SelectedTheme = _DefaultTheme;
-            _SelectedTheme.IsSelected = true;
-        }
-        #endregion constructors
+                if (_SelectedTheme != null)
+                    _SelectedTheme.IsSelected = true;
 
-        #region properties
-        /// <summary>
-        /// Returns a default theme that should be applied when nothing else is available.
-        /// </summary>
-        public ThemeDefinitionViewModel DefaultTheme
-        {
-            get
-            {
-                return _DefaultTheme;
+                NotifyPropertyChanged(() => SelectedTheme);
             }
         }
-
-        /// <summary>
-        /// Returns a list of theme definitons.
-        /// </summary>
-        public List<ThemeDefinitionViewModel> ListOfThemes
-        {
-            get
-            {
-                return _ListOfThemes.Select(it => it.Value).ToList();
-            }
-        }
-
-        /// <summary>
-        /// Gets the currently selected theme (or desfault on applaiction start-up)
-        /// </summary>
-        public ThemeDefinitionViewModel SelectedTheme
-        {
-            get
-            {
-                return _SelectedTheme;
-            }
-
-            private set
-            {
-                if (_SelectedTheme != value)
-                {
-                    if (_SelectedTheme != null)
-                        _SelectedTheme.IsSelected = false;
-
-                    _SelectedTheme = value;
-
-                    if (_SelectedTheme != null)
-                        _SelectedTheme.IsSelected = true;
-
-                    NotifyPropertyChanged(() => SelectedTheme);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets whether a different theme can be selected right now or not.
-        /// This property should be bound to the UI that selects a different
-        /// theme to avoid the case in which a user could select a theme and
-        /// select a different theme while the first theme change request is
-        /// still processed.
-        /// </summary>
-        public bool IsEnabled
-        {
-            get { return _IsEnabled; }
-
-            private set
-            {
-                if (_IsEnabled != value)
-                {
-                    _IsEnabled = value;
-                    NotifyPropertyChanged(() => IsEnabled);
-                }
-            }
-        }
-        #endregion properties
-
-        #region methods
-        /// <summary>
-        /// Applies a new theme based on the changed selection in the input element.
-        /// </summary>
-        /// <param name="ts"></param>
-        public void ApplyTheme(FrameworkElement fe, string themeName)
-        {
-            if (themeName != null)
-            {
-                IsEnabled = false;
-                try
-                {
-                    var settings = GetService<ISettingsManager>(); // add the default themes
-
-                    Color AccentColor = ThemeViewModel.GetCurrentAccentColor(settings);
-                    GetService<IAppearanceManager>().SetTheme(settings.Themes, themeName, AccentColor);
-
-                    ThemeDefinitionViewModel o;
-                    _ListOfThemes.TryGetValue(themeName, out o);
-                    SelectedTheme = o;
-                }
-                catch
-                {
-                }
-                finally
-                {
-                    IsEnabled = true;
-                }
-            }
-        }
-
-        public static Color GetCurrentAccentColor(ISettingsManager settings)
-        {
-            Color AccentColor = default(Color);
-
-            if (settings.Options.GetOptionValue<bool>("Appearance", "ApplyWindowsDefaultAccent"))
-            {
-                try
-                {
-                    AccentColor = SystemParameters.WindowGlassColor;
-                }
-                catch
-                {
-                }
-
-                // This may be black on Windows 7 and the experience is black & white then :-(
-                if (AccentColor == default(Color) || AccentColor == Colors.Black || AccentColor.A == 0)
-                    AccentColor = Color.FromRgb(0x1b, 0xa1, 0xe2);
-            }
-            else
-                AccentColor = settings.Options.GetOptionValue<Color>("Appearance", "AccentColor");
-
-            return AccentColor;
-        }
-        #endregion methods
     }
+
+    /// <summary>
+    /// Gets whether a different theme can be selected right now or not.
+    /// This property should be bound to the UI that selects a different
+    /// theme to avoid the case in which a user could select a theme and
+    /// select a different theme while the first theme change request is
+    /// still processed.
+    /// </summary>
+    public bool IsEnabled
+    {
+        get => _IsEnabled;
+
+        private set
+        {
+            if (_IsEnabled != value)
+            {
+                _IsEnabled = value;
+                NotifyPropertyChanged(() => IsEnabled);
+            }
+        }
+    }
+    #endregion properties
+
+    #region methods
+    /// <summary>
+    /// Applies a new theme based on the changed selection in the input element.
+    /// </summary>
+    /// <param name="ts"></param>
+    public void ApplyTheme(FrameworkElement fe, string themeName)
+    {
+        if (themeName != null)
+        {
+            IsEnabled = false;
+            try
+            {
+                var settings = GetService<ISettingsManager>(); // add the default themes
+
+                Color AccentColor = GetCurrentAccentColor(settings);
+                GetService<IAppearanceManager>().SetTheme(settings.Themes, themeName, AccentColor);
+
+                _ListOfThemes.TryGetValue(themeName, out var o);
+                SelectedTheme = o;
+            }
+            catch
+            {
+            }
+            finally
+            {
+                IsEnabled = true;
+            }
+        }
+    }
+
+    public static Color GetCurrentAccentColor(ISettingsManager settings)
+    {
+        Color AccentColor = default(Color);
+
+        if (settings.Options.GetOptionValue<bool>("Appearance", "ApplyWindowsDefaultAccent"))
+        {
+            try
+            {
+                AccentColor = SystemParameters.WindowGlassColor;
+            }
+            catch
+            {
+            }
+
+            // This may be black on Windows 7 and the experience is black & white then :-(
+            if (AccentColor == default(Color) || AccentColor == Colors.Black || AccentColor.A == 0)
+                AccentColor = Color.FromRgb(0x1b, 0xa1, 0xe2);
+        }
+        else
+            AccentColor = settings.Options.GetOptionValue<Color>("Appearance", "AccentColor");
+
+        return AccentColor;
+    }
+    #endregion methods
 }

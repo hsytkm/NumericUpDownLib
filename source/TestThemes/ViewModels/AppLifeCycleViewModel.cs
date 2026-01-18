@@ -1,365 +1,340 @@
-﻿namespace TestThemes.ViewModels
+﻿namespace TestThemes.ViewModels;
+
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Windows.Input;
+using MLib.Interfaces;
+using Models;
+using Settings.Interfaces;
+using Settings.UserProfile;
+
+/// <summary>
+/// Implements application life cycle relevant properties and methods,
+/// such as: state for shutdown, shutdown_cancel, command for shutdown,
+/// and methods for save and load application configuration.
+/// </summary>
+public class AppLifeCycleViewModel : Base.ViewModelBase
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Windows.Input;
-    using MLib.Interfaces;
-    using Models;
-    using Settings.Interfaces;
-    using Settings.UserProfile;
+    #region fields
+    protected static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+    private bool? mDialogCloseResult = null;
+    private bool mShutDownInProgress = false;
+    private bool mShutDownInProgress_Cancel = false;
+
+    private ICommand mExitApp = null;
+    #endregion fields
+
+    #region properties
+    /// <summary>
+    /// Gets a string for display of the application title.
+    /// </summary>
+    public string Application_Title => AppCore.Application_Title;
 
     /// <summary>
-    /// Implements application life cycle relevant properties and methods,
-    /// such as: state for shutdown, shutdown_cancel, command for shutdown,
-    /// and methods for save and load application configuration.
+    /// Get path and file name to application specific settings file
     /// </summary>
-    public class AppLifeCycleViewModel : Base.ViewModelBase
+    public string DirFileAppSettingsData => System.IO.Path.Combine(AppCore.DirAppData,
+                                          string.Format(CultureInfo.InvariantCulture, "{0}.App.settings",
+                                          AppCore.AssemblyTitle));
+
+    /// <summary>
+    /// This can be used to close the attached view via ViewModel
+    /// 
+    /// Source: http://stackoverflow.com/questions/501886/wpf-mvvm-newbie-how-should-the-viewmodel-close-the-form
+    /// </summary>
+    public bool? DialogCloseResult
     {
-        #region fields
-        protected static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        get => mDialogCloseResult;
 
-        private bool? mDialogCloseResult = null;
-        private bool mShutDownInProgress = false;
-        private bool mShutDownInProgress_Cancel = false;
-
-        private ICommand mExitApp = null;
-        #endregion fields
-
-        #region properties
-        /// <summary>
-        /// Gets a string for display of the application title.
-        /// </summary>
-        public string Application_Title
+        private set
         {
-            get
+            if (mDialogCloseResult != value)
             {
-                return Models.AppCore.Application_Title;
+                mDialogCloseResult = value;
+                NotifyPropertyChanged(() => DialogCloseResult);
             }
         }
+    }
 
-        /// <summary>
-        /// Get path and file name to application specific settings file
-        /// </summary>
-        public string DirFileAppSettingsData
+    /// <summary>
+    /// Gets a command to exit (end) the application.
+    /// </summary>
+    public ICommand ExitApp
+    {
+        get
         {
-            get
+            if (mExitApp == null)
             {
-                return System.IO.Path.Combine(Models.AppCore.DirAppData,
-                                              string.Format(CultureInfo.InvariantCulture, "{0}.App.settings",
-                                              Models.AppCore.AssemblyTitle));
+                mExitApp = new Base.RelayCommand<object>((p) => AppExit_CommandExecuted(),
+                                                         (p) => Closing_CanExecute());
             }
+
+            return mExitApp;
+        }
+    }
+
+    /// <summary>
+    /// Get a path to the directory where the user store his documents
+    /// </summary>
+    public static string MyDocumentsUserDir => Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+    public bool ShutDownInProgress_Cancel
+    {
+        get => mShutDownInProgress_Cancel;
+
+        set
+        {
+            if (mShutDownInProgress_Cancel != value)
+                mShutDownInProgress_Cancel = value;
+        }
+    }
+    #endregion properties
+
+    #region methods
+    private void CreateDefaultsSettings(ISettingsManager settings
+                                      , IAppearanceManager appearance)
+    {
+        try
+        {
+            // Add default themings for Dark and Light
+            appearance.SetDefaultThemes(settings.Themes);
+
+            // Add additional Dark resources to those theme resources added above
+            appearance.AddThemeResources("Dark", new List<Uri>
+            {
+              new Uri("/TestThemes;component/AppLocalResources.xaml", UriKind.RelativeOrAbsolute)
+             ,new Uri("/MWindowLib;component/Themes/DarkTheme.xaml", UriKind.RelativeOrAbsolute)
+             ,new Uri("/NumericUpDownLib;component/Themes/DarkBrushs.xaml", UriKind.RelativeOrAbsolute)
+
+             ,new Uri("/TestThemes;component/BindToMLib/NumericUpDownLib/DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
+             ,new Uri("/TestThemes;component/BindToMLib/MWindowLib/DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
+
+            }, settings.Themes);
+        }
+        catch
+        {
         }
 
-        /// <summary>
-        /// This can be used to close the attached view via ViewModel
-        /// 
-        /// Source: http://stackoverflow.com/questions/501886/wpf-mvvm-newbie-how-should-the-viewmodel-close-the-form
-        /// </summary>
-        public bool? DialogCloseResult
+        try
         {
-            get
+            // Add additional Light resources to those theme resources added above
+            appearance.AddThemeResources("Light", new List<Uri>
             {
-                return mDialogCloseResult;
-            }
+              new Uri("/TestThemes;component/AppLocalResources.xaml", UriKind.RelativeOrAbsolute)
+             ,new Uri("/MWindowLib;component/Themes/LightTheme.xaml", UriKind.RelativeOrAbsolute)
+             ,new Uri("/NumericUpDownLib;component/Themes/LightBrushs.xaml", UriKind.RelativeOrAbsolute)
 
-            private set
-            {
-                if (mDialogCloseResult != value)
-                {
-                    mDialogCloseResult = value;
-                    NotifyPropertyChanged(() => DialogCloseResult);
-                }
-            }
+             ,new Uri("/TestThemes;component/BindToMLib/NumericUpDownLib/DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
+             ,new Uri("/TestThemes;component/BindToMLib/MWindowLib/DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
+
+            }, settings.Themes);
+        }
+        catch
+        {
         }
 
-        /// <summary>
-        /// Gets a command to exit (end) the application.
-        /// </summary>
-        public ICommand ExitApp
+        try
         {
-            get
-            {
-                if (mExitApp == null)
-                {
-                    mExitApp = new Base.RelayCommand<object>((p) => AppExit_CommandExecuted(),
-                                                             (p) => Closing_CanExecute());
-                }
+            // Create a general settings model to make sure the app is at least governed by defaults
+            // if there are no customized settings on first ever start-up of application
+            var options = settings.Options;
 
-                return mExitApp;
-            }
+            SettingDefaults.CreateGeneralSettings(options);
+            SettingDefaults.CreateAppearanceSettings(options, settings);
+
+            settings.Options.SetUndirty();
         }
-
-        /// <summary>
-        /// Get a path to the directory where the user store his documents
-        /// </summary>
-        public static string MyDocumentsUserDir
+        catch
         {
-            get
-            {
-                return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            }
         }
+    }
 
-        public bool ShutDownInProgress_Cancel
+    #region Save Load Application configuration
+    /// <summary>
+    /// Save application settings when the application is being closed down
+    /// </summary>
+    public void SaveConfigOnAppClosed(IViewSize win)
+    {
+        /***
+                    try
+                    {
+                        Models.AppCore.CreateAppDataFolder();
+
+                        // Save App view model fields
+                        var settings = base.GetService<ISettingsManager>();
+
+                        //// settings.SessionData.LastActiveSourceFile = this.mStringDiff.SourceFilePath;
+                        //// settings.SessionData.LastActiveTargetFile = this.mStringDiff.TargetFilePath;
+
+                        // Save program options only if there are un-saved changes that need persistence
+                        // This can be caused when WPF theme was changed or something else
+                        // but should normally not occur as often as saving session data
+                        if (settings.Options.IsDirty == true)
+                        {
+                            ////settings.SaveOptions(AppCore.DirFileAppSettingsData, settings.SettingData);
+                            settings.Options.WriteXML(DirFileAppSettingsData);
+                        }
+
+                        settings.SaveSessionData(Models.AppCore.DirFileAppSessionData, settings.SessionData);
+                    }
+                    catch (Exception exp)
+                    {
+                        var msg = GetService<IMessageBoxService>();
+                        msg.Show(exp, "Unexpected Error" // Local.Strings.STR_UnexpectedError_Caption
+                                    , MsgBoxButtons.OK, MsgBoxImage.Error);
+                    }
+        ***/
+    }
+
+    /// <summary>
+    /// Load configuration from persistence on startup of application
+    /// </summary>
+    public void LoadConfigOnAppStartup(ISettingsManager settings
+                                      , IAppearanceManager appearance)
+    {
+        try
         {
-            get
-            {
-                return mShutDownInProgress_Cancel;
-            }
+            CreateDefaultsSettings(settings, appearance);
 
-            set
-            {
-                if (mShutDownInProgress_Cancel != value)
-                    mShutDownInProgress_Cancel = value;
-            }
-        }
-        #endregion properties
-
-        #region methods
-        private void CreateDefaultsSettings(ISettingsManager settings
-                                          , IAppearanceManager appearance)
-        {
-            try
-            {
-                // Add default themings for Dark and Light
-                appearance.SetDefaultThemes(settings.Themes);
-
-                // Add additional Dark resources to those theme resources added above
-                appearance.AddThemeResources("Dark", new List<Uri>
-                {
-                  new Uri("/TestThemes;component/AppLocalResources.xaml", UriKind.RelativeOrAbsolute)
-                 ,new Uri("/MWindowLib;component/Themes/DarkTheme.xaml", UriKind.RelativeOrAbsolute)
-                 ,new Uri("/NumericUpDownLib;component/Themes/DarkBrushs.xaml", UriKind.RelativeOrAbsolute)
-
-                 ,new Uri("/TestThemes;component/BindToMLib/NumericUpDownLib/DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
-                 ,new Uri("/TestThemes;component/BindToMLib/MWindowLib/DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
-
-                }, settings.Themes);
-            }
-            catch
-            {
-            }
-
-            try
-            {
-                // Add additional Light resources to those theme resources added above
-                appearance.AddThemeResources("Light", new List<Uri>
-                {
-                  new Uri("/TestThemes;component/AppLocalResources.xaml", UriKind.RelativeOrAbsolute)
-                 ,new Uri("/MWindowLib;component/Themes/LightTheme.xaml", UriKind.RelativeOrAbsolute)
-                 ,new Uri("/NumericUpDownLib;component/Themes/LightBrushs.xaml", UriKind.RelativeOrAbsolute)
-
-                 ,new Uri("/TestThemes;component/BindToMLib/NumericUpDownLib/DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
-                 ,new Uri("/TestThemes;component/BindToMLib/MWindowLib/DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
-
-                }, settings.Themes);
-            }
-            catch
-            {
-            }
-
-            try
-            {
-                // Create a general settings model to make sure the app is at least governed by defaults
-                // if there are no customized settings on first ever start-up of application
-                var options = settings.Options;
-
-                SettingDefaults.CreateGeneralSettings(options);
-                SettingDefaults.CreateAppearanceSettings(options, settings);
-
-                settings.Options.SetUndirty();
-            }
-            catch
-            {
-            }
-        }
-
-        #region Save Load Application configuration
-        /// <summary>
-        /// Save application settings when the application is being closed down
-        /// </summary>
-        public void SaveConfigOnAppClosed(IViewSize win)
-        {
             /***
-                        try
-                        {
-                            Models.AppCore.CreateAppDataFolder();
+                // Re/Load program options and user profile session data to control global behaviour of program
+                ////settings.LoadOptions(AppCore.DirFileAppSettingsData);
+                settings.Options.ReadXML(DirFileAppSettingsData);
+                settings.LoadSessionData(Models.AppCore.DirFileAppSessionData);
 
-                            // Save App view model fields
-                            var settings = base.GetService<ISettingsManager>();
-
-                            //// settings.SessionData.LastActiveSourceFile = this.mStringDiff.SourceFilePath;
-                            //// settings.SessionData.LastActiveTargetFile = this.mStringDiff.TargetFilePath;
-
-                            // Save program options only if there are un-saved changes that need persistence
-                            // This can be caused when WPF theme was changed or something else
-                            // but should normally not occur as often as saving session data
-                            if (settings.Options.IsDirty == true)
-                            {
-                                ////settings.SaveOptions(AppCore.DirFileAppSettingsData, settings.SettingData);
-                                settings.Options.WriteXML(DirFileAppSettingsData);
-                            }
-
-                            settings.SaveSessionData(Models.AppCore.DirFileAppSessionData, settings.SessionData);
-                        }
-                        catch (Exception exp)
-                        {
-                            var msg = GetService<IMessageBoxService>();
-                            msg.Show(exp, "Unexpected Error" // Local.Strings.STR_UnexpectedError_Caption
-                                        , MsgBoxButtons.OK, MsgBoxImage.Error);
-                        }
+                settings.CheckSettingsOnLoad(SystemParameters.VirtualScreenLeft,
+                                                SystemParameters.VirtualScreenTop);
             ***/
         }
-
-        /// <summary>
-        /// Load configuration from persistence on startup of application
-        /// </summary>
-        public void LoadConfigOnAppStartup(ISettingsManager settings
-                                          , IAppearanceManager appearance)
+        catch
         {
-            try
-            {
-                CreateDefaultsSettings(settings, appearance);
+        }
+    }
+    #endregion Save Load Application configuration
 
-                /***
-                    // Re/Load program options and user profile session data to control global behaviour of program
-                    ////settings.LoadOptions(AppCore.DirFileAppSettingsData);
-                    settings.Options.ReadXML(DirFileAppSettingsData);
-                    settings.LoadSessionData(Models.AppCore.DirFileAppSessionData);
-
-                    settings.CheckSettingsOnLoad(SystemParameters.VirtualScreenLeft,
-                                                    SystemParameters.VirtualScreenTop);
-                ***/
-            }
-            catch
+    #region StartUp/ShutDown
+    private void AppExit_CommandExecuted()
+    {
+        try
+        {
+            if (Closing_CanExecute() == true)
             {
+                mShutDownInProgress_Cancel = false;
+                OnRequestClose();
             }
         }
-        #endregion Save Load Application configuration
-
-        #region StartUp/ShutDown
-        private void AppExit_CommandExecuted()
+        catch (Exception exp)
         {
-            try
-            {
-                if (Closing_CanExecute() == true)
-                {
-                    mShutDownInProgress_Cancel = false;
-                    OnRequestClose();
-                }
-            }
-            catch (Exception exp)
-            {
-                logger.Error(exp.Message, exp);
+            logger.Error(exp.Message, exp);
 
-                ////                var msg = GetService<IMessageBoxService>();
-                ////                msg.Show(exp, "Unknown Error",
-                ////                MsgBoxButtons.OK, MsgBoxImage.Error, MsgBoxResult.NoDefaultButton);
-            }
+            ////                var msg = GetService<IMessageBoxService>();
+            ////                msg.Show(exp, "Unknown Error",
+            ////                MsgBoxButtons.OK, MsgBoxImage.Error, MsgBoxResult.NoDefaultButton);
         }
+    }
 
-        private bool Closing_CanExecute()
+    private bool Closing_CanExecute()
+    {
+        return true;
+    }
+
+    /// <summary>
+    /// Check if pre-requisites for closing application are available.
+    /// Save session data on closing and cancel closing process if necessary.
+    /// </summary>
+    /// <returns>true if application is OK to proceed closing with closed, otherwise false.</returns>
+    public bool Exit_CheckConditions(object sender)
+    {
+        //// var msg = ServiceLocator.ServiceContainer.Instance.GetService<IMessageBoxService>();
+        try
         {
-            return true;
-        }
-
-        /// <summary>
-        /// Check if pre-requisites for closing application are available.
-        /// Save session data on closing and cancel closing process if necessary.
-        /// </summary>
-        /// <returns>true if application is OK to proceed closing with closed, otherwise false.</returns>
-        public bool Exit_CheckConditions(object sender)
-        {
-            //// var msg = ServiceLocator.ServiceContainer.Instance.GetService<IMessageBoxService>();
-            try
-            {
-                if (mShutDownInProgress == true)
-                    return true;
-
-                // this return is normally computed if there are documents open with unsaved data
+            if (mShutDownInProgress == true)
                 return true;
 
-                ////// Do layout serialization after saving/closing files
-                ////// since changes implemented by shut-down process are otherwise lost
-                ////try
-                ////{
-                ////    App.CreateAppDataFolder();
-                ////    this.SerializeLayout(sender);            // Store the current layout for later retrieval
-                ////}
-                ////catch
-                ////{
-                ////}
-            }
-            catch (Exception exp)
-            {
-                logger.Error(exp.Message, exp);
-
-                ////                var msg = GetService<IMessageBoxService>();
-                ////
-                ////                msg.Show(exp, "Unexpected Error"//Local.Strings.STR_UnexpectedError_Caption,
-                ////                            , MsgBoxButtons.OK, MsgBoxImage.Error, MsgBoxResult.NoDefaultButton);
-                ////                //App.IssueTrackerLink, App.IssueTrackerLink, Util.Local.Strings.STR_MSG_IssueTrackerText, null, true);
-            }
-
+            // this return is normally computed if there are documents open with unsaved data
             return true;
+
+            ////// Do layout serialization after saving/closing files
+            ////// since changes implemented by shut-down process are otherwise lost
+            ////try
+            ////{
+            ////    App.CreateAppDataFolder();
+            ////    this.SerializeLayout(sender);            // Store the current layout for later retrieval
+            ////}
+            ////catch
+            ////{
+            ////}
+        }
+        catch (Exception exp)
+        {
+            logger.Error(exp.Message, exp);
+
+            ////                var msg = GetService<IMessageBoxService>();
+            ////
+            ////                msg.Show(exp, "Unexpected Error"//Local.Strings.STR_UnexpectedError_Caption,
+            ////                            , MsgBoxButtons.OK, MsgBoxImage.Error, MsgBoxResult.NoDefaultButton);
+            ////                //App.IssueTrackerLink, App.IssueTrackerLink, Util.Local.Strings.STR_MSG_IssueTrackerText, null, true);
         }
 
-        #region RequestClose [event]
-        /// <summary>
-        /// Raised when this workspace should be removed from the UI.
-        /// </summary>
-        ////public event EventHandler ApplicationClosed;
+        return true;
+    }
 
-        /// <summary>
-        /// Method to be executed when user (or program) tries to close the application
-        /// </summary>
-        public void OnRequestClose(bool ShutDownAfterClosing = true)
+    #region RequestClose [event]
+    /// <summary>
+    /// Raised when this workspace should be removed from the UI.
+    /// </summary>
+    ////public event EventHandler ApplicationClosed;
+
+    /// <summary>
+    /// Method to be executed when user (or program) tries to close the application
+    /// </summary>
+    public void OnRequestClose(bool ShutDownAfterClosing = true)
+    {
+        try
         {
-            try
+            if (ShutDownAfterClosing == true)
             {
-                if (ShutDownAfterClosing == true)
+                if (mShutDownInProgress == false)
                 {
-                    if (mShutDownInProgress == false)
-                    {
-                        if (DialogCloseResult == null)
-                            DialogCloseResult = true;      // Execute Closing event via attached property
+                    if (DialogCloseResult == null)
+                        DialogCloseResult = true;      // Execute Closing event via attached property
 
-                        if (mShutDownInProgress_Cancel == true)
-                        {
-                            mShutDownInProgress = false;
-                            mShutDownInProgress_Cancel = false;
-                            DialogCloseResult = null;
-                        }
+                    if (mShutDownInProgress_Cancel == true)
+                    {
+                        mShutDownInProgress = false;
+                        mShutDownInProgress_Cancel = false;
+                        DialogCloseResult = null;
                     }
                 }
-                else
-                    mShutDownInProgress = true;
-
-                CommandManager.InvalidateRequerySuggested();
-
-                ////EventHandler handler = ApplicationClosed;
-                ////if (handler != null)
-                ////  handler(this, EventArgs.Empty);
             }
-            catch (Exception exp)
-            {
-                mShutDownInProgress = false;
+            else
+                mShutDownInProgress = true;
 
-                logger.Error(exp.Message, exp);
+            CommandManager.InvalidateRequerySuggested();
 
-                ////                var msg = GetService<IMessageBoxService>();
-                ////                msg.Show(exp, "Unexpected Error" //Local.Strings.STR_UnexpectedError_Caption
-                ////                            , MsgBoxButtons.OK, MsgBoxImage.Error, MsgBoxResult.NoDefaultButton);
-            }
+            ////EventHandler handler = ApplicationClosed;
+            ////if (handler != null)
+            ////  handler(this, EventArgs.Empty);
         }
-
-        public void CancelShutDown()
+        catch (Exception exp)
         {
-            DialogCloseResult = null;
+            mShutDownInProgress = false;
+
+            logger.Error(exp.Message, exp);
+
+            ////                var msg = GetService<IMessageBoxService>();
+            ////                msg.Show(exp, "Unexpected Error" //Local.Strings.STR_UnexpectedError_Caption
+            ////                            , MsgBoxButtons.OK, MsgBoxImage.Error, MsgBoxResult.NoDefaultButton);
         }
-        #endregion // RequestClose [event]
-        #endregion StartUp/ShutDown
-        #endregion methods
     }
+
+    public void CancelShutDown()
+    {
+        DialogCloseResult = null;
+    }
+    #endregion // RequestClose [event]
+    #endregion StartUp/ShutDown
+    #endregion methods
 }

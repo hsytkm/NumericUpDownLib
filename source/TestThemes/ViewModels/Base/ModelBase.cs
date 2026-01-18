@@ -1,15 +1,14 @@
-﻿namespace TestThemes.ViewModels.Base
+﻿namespace TestThemes.ViewModels.Base;
+
+public class ModelBase
 {
-    public class ModelBase
+    /// <summary>
+    /// Gets an instance of the service container and retrieves the requested service coponent.
+    /// </summary>
+    /// <typeparam name="TServiceContract"></typeparam>
+    /// <returns></returns>
+    public TServiceContract GetService<TServiceContract>() where TServiceContract : class
     {
-        /// <summary>
-        /// Gets an instance of the service container and retrieves the requested service coponent.
-        /// </summary>
-        /// <typeparam name="TServiceContract"></typeparam>
-        /// <returns></returns>
-        public TServiceContract GetService<TServiceContract>() where TServiceContract : class
-        {
-            return ServiceLocator.ServiceContainer.Instance.GetService<TServiceContract>();
-        }
+        return ServiceLocator.ServiceContainer.Instance.GetService<TServiceContract>();
     }
 }

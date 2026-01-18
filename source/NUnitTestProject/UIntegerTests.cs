@@ -1,125 +1,124 @@
-using System;
+﻿using System;
 using System.Threading;
 using NumericUpDownLib;
 using NumericUpDownLib.Base;
 using NUnit.Framework;
 
-namespace NUnitTestProject
+namespace NUnitTestProject;
+
+[Apartment(ApartmentState.STA)]
+public class UIntegerTests
 {
-    [Apartment(ApartmentState.STA)]
-    public class UIntegerTests
+    [SetUp]
+    public void Setup()
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
+    }
 
-        /// <summary>
-        /// Tests whether values are set correctly as required while maintaining
-        /// valid values at all times.
-        /// </summary>
-        [Test]
-        public void TestValues()
-        {
-            TestAllPermutations(25, 50, 75);
-            TestAllPermutations(0, 15, 75);
-            TestAllPermutations(50, 50, 75);
-            TestAllPermutations(50, 50, 50);
-            TestAllPermutations(150, 250, 255);
-        }
+    /// <summary>
+    /// Tests whether values are set correctly as required while maintaining
+    /// valid values at all times.
+    /// </summary>
+    [Test]
+    public void TestValues()
+    {
+        TestAllPermutations(25, 50, 75);
+        TestAllPermutations(0, 15, 75);
+        TestAllPermutations(50, 50, 75);
+        TestAllPermutations(50, 50, 50);
+        TestAllPermutations(150, 250, 255);
+    }
 
-        /// <summary>
-        /// Tests all permutions for all sequences of three elements.
-        /// </summary>
-        /// <param name="min"></param>
-        /// <param name="val"></param>
-        /// <param name="max"></param>
-        public void TestAllPermutations(uint min, uint val, uint max)
+    /// <summary>
+    /// Tests all permutions for all sequences of three elements.
+    /// </summary>
+    /// <param name="min"></param>
+    /// <param name="val"></param>
+    /// <param name="max"></param>
+    public void TestAllPermutations(uint min, uint val, uint max)
+    {
+        string[,] ctrl = new string[6, 3]
         {
-            string[,] ctrl = new string[6, 3]
+            { "min", "val", "max" },
+            { "val", "min", "max" },
+            { "val", "max", "min" },
+            { "val", "min", "max" },
+            { "min", "max", "val" },
+            { "max", "min", "val" },
+        };
+
+        for (int i = 0; i < 6; i++)
+        {
+            var range = new UIntegerUpDown();
+            string testPermutation = "";
+
+            for (int j = 0; j < 3; j++)
             {
-                { "min", "val", "max" },
-                { "val", "min", "max" },
-                { "val", "max", "min" },
-                { "val", "min", "max" },
-                { "min", "max", "val" },
-                { "max", "min", "val" },
-            };
+                var itemToSet = ctrl[i, j];
 
-            for (int i = 0; i < 6; i++)
-            {
-                var range = new UIntegerUpDown();
-                string testPermutation = "";
+                if (string.IsNullOrEmpty(testPermutation))
+                    testPermutation = itemToSet;
+                else
+                    testPermutation += ", " + itemToSet;
 
-                for (int j = 0; j < 3; j++)
+                switch (itemToSet)
                 {
-                    var itemToSet = ctrl[i, j];
+                    case "min":
+                        range.MinValue = min;
+                        Assert.That(IsValidRange(range));
+                        break;
 
-                    if (string.IsNullOrEmpty(testPermutation))
-                        testPermutation = itemToSet;
-                    else
-                        testPermutation += ", " + itemToSet;
+                    case "val":
+                        range.Value = val;
+                        Assert.That(IsValidRange(range));
+                        break;
 
-                    switch (itemToSet)
-                    {
-                        case "min":
-                            range.MinValue = min;
-                            Assert.That(IsValidRange(range));
-                            break;
+                    case "max":
+                        range.MaxValue = max;
+                        Assert.That(IsValidRange(range));
+                        break;
 
-                        case "val":
-                            range.Value = val;
-                            Assert.That(IsValidRange(range));
-                            break;
-
-                        case "max":
-                            range.MaxValue = max;
-                            Assert.That(IsValidRange(range));
-                            break;
-
-                        default:
-                            break;
-                    }
+                    default:
+                        break;
                 }
-
-                Console.WriteLine("Testing Permutation {0}: {1} - min={2}, val={3}, max={4}", i, testPermutation, min, val, max);
-                Assert.That(IsValidRange(range));
-
-                Assert.That(range.MinValue == min);
-                Assert.That(range.Value == val);
-                Assert.That(range.MaxValue == max);
-
-                // Test if increment command works as expected
-                while (range.MaxValue > range.Value)
-                {
-                    Assert.That(InputBaseUpDown.IncreaseCommand.CanExecute(null, range));
-                    InputBaseUpDown.IncreaseCommand.Execute(null, range);
-                }
-                Assert.That(range.MaxValue == range.Value);
-
-                // Test if decrement command works as expected
-                while (range.MinValue < range.Value)
-                {
-                    Assert.That(InputBaseUpDown.DecreaseCommand.CanExecute(null, range));
-                    InputBaseUpDown.DecreaseCommand.Execute(null, range);
-                }
-                Assert.That(range.MinValue == range.Value);
             }
+
+            Console.WriteLine("Testing Permutation {0}: {1} - min={2}, val={3}, max={4}", i, testPermutation, min, val, max);
+            Assert.That(IsValidRange(range));
+
+            Assert.That(range.MinValue == min);
+            Assert.That(range.Value == val);
+            Assert.That(range.MaxValue == max);
+
+            // Test if increment command works as expected
+            while (range.MaxValue > range.Value)
+            {
+                Assert.That(InputBaseUpDown.IncreaseCommand.CanExecute(null, range));
+                InputBaseUpDown.IncreaseCommand.Execute(null, range);
+            }
+            Assert.That(range.MaxValue == range.Value);
+
+            // Test if decrement command works as expected
+            while (range.MinValue < range.Value)
+            {
+                Assert.That(InputBaseUpDown.DecreaseCommand.CanExecute(null, range));
+                InputBaseUpDown.DecreaseCommand.Execute(null, range);
+            }
+            Assert.That(range.MinValue == range.Value);
         }
+    }
 
-        /// <summary>
-        /// Determines whether the given set of values defines a valid range or not.
-        /// A valid range adheres to this constrain: MinValue <= Value <= MaxValue.
-        /// </summary>
-        /// <param name="range"></param>
-        /// <returns></returns>
-        bool IsValidRange(UIntegerUpDown range)
-        {
-            if (range.MinValue <= range.Value && range.Value <= range.MaxValue)
-                return true;
+    /// <summary>
+    /// Determines whether the given set of values defines a valid range or not.
+    /// A valid range adheres to this constrain: MinValue <= Value <= MaxValue.
+    /// </summary>
+    /// <param name="range"></param>
+    /// <returns></returns>
+    bool IsValidRange(UIntegerUpDown range)
+    {
+        if (range.MinValue <= range.Value && range.Value <= range.MaxValue)
+            return true;
 
-            return false;
+        return false;
 
-        }
     }
 }

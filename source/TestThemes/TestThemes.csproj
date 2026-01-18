@@ -4,6 +4,12 @@
     <TargetFramework>net48</TargetFramework>
     <UseWPF>true</UseWPF>
     <OutputType>WinExe</OutputType>
+
+    <!--
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    -->
+    <LangVersion>14</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,10 +21,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Demo\MLibTest\Components\ServiceLocator\ServiceLocator.csproj" />
-    <ProjectReference Include="..\Demo\MLibTest\Components\Settings\SettingsModel\SettingsModel.csproj" />
     <ProjectReference Include="..\Demo\MLibTest\Components\Settings\Settings\Settings.csproj" />
     <ProjectReference Include="..\Demo\UpDownDemoLib\UpDownDemoLib.csproj" />
-    <ProjectReference Include="..\NumericUpDownLib\NumericUpDownLib.csproj" />
   </ItemGroup>
 
 </Project>

@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Demo\UpDownDemoLib\UpDownDemoLib.csproj" />
-    <ProjectReference Include="..\NumericUpDownLib\NumericUpDownLib.csproj" />
   </ItemGroup>
 
 </Project>

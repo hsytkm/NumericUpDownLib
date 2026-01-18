@@ -1,32 +1,25 @@
-﻿namespace Settings.ProgramSettings
+﻿namespace Settings.ProgramSettings;
+
+using Settings.Interfaces;
+using SettingsModel.Interfaces;
+using SettingsModel.Models;
+
+internal class OptionsPanel : IOptionsPanel
 {
-    using Settings.Interfaces;
-    using SettingsModel.Interfaces;
-    using SettingsModel.Models;
+    private IEngine? mQuery = null;
 
-    internal class OptionsPanel : IOptionsPanel
+    public OptionsPanel()
     {
-        private IEngine? mQuery = null;
+        mQuery = Factory.CreateEngine();
+    }
 
-        public OptionsPanel()
-        {
-            mQuery = Factory.CreateEngine();
-        }
+    /// <summary>
+    /// Gets the options <seealso cref="IEngine"/> that used to manage program options.
+    /// </summary>
+    public IEngine? Options
+    {
+        get => mQuery;
 
-        /// <summary>
-        /// Gets the options <seealso cref="IEngine"/> that used to manage program options.
-        /// </summary>
-        public IEngine? Options
-        {
-            get
-            {
-                return mQuery;
-            }
-
-            private set
-            {
-                mQuery = value;
-            }
-        }
+        private set => mQuery = value;
     }
 }

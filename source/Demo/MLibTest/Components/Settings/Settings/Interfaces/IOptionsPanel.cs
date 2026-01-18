@@ -1,9 +1,8 @@
-﻿namespace Settings.Interfaces
-{
-    using SettingsModel.Interfaces;
+﻿namespace Settings.Interfaces;
 
-    public interface IOptionsPanel
-    {
-        IEngine? Options { get; }
-    }
+using SettingsModel.Interfaces;
+
+public interface IOptionsPanel
+{
+    IEngine? Options { get; }
 }

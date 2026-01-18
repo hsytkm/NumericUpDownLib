@@ -1,26 +1,25 @@
-﻿namespace TestThemes
+﻿namespace TestThemes;
+
+using Settings.UserProfile;
+using ViewModels;
+
+/// <summary>
+/// Interaction logic for MainWindow.xaml
+/// </summary>
+public partial class MainWindow : MWindowLib.MetroWindow
+                                 , IViewSize  // Implements saving and loading/repositioning of Window
 {
-    using Settings.UserProfile;
-    using ViewModels;
-
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : MWindowLib.MetroWindow
-                                     , IViewSize  // Implements saving and loading/repositioning of Window
+    public MainWindow()
     {
-        public MainWindow()
-        {
-            InitializeComponent();
-            Loaded += MainWindow_Loaded;
-        }
+        InitializeComponent();
+        Loaded += MainWindow_Loaded;
+    }
 
-        private void MainWindow_Loaded(object sender, System.Windows.RoutedEventArgs e)
-        {
-            Loaded -= MainWindow_Loaded;
+    private void MainWindow_Loaded(object sender, System.Windows.RoutedEventArgs e)
+    {
+        Loaded -= MainWindow_Loaded;
 
-            var viewModel = this.DataContext as AppViewModel;
+        var viewModel = DataContext as AppViewModel;
 
-        }
     }
 }

@@ -1,17 +1,16 @@
-﻿namespace SettingsModel.Models
-{
-    using System.Xml.Serialization;
+﻿namespace SettingsModel.Models;
 
+using System.Xml.Serialization;
+
+/// <summary>
+/// Implement a simple file reverence model to allow XML persistence
+/// of a List <seealso cref="FileReference"/> via this class.
+/// </summary>
+public class FileReference
+{
     /// <summary>
-    /// Implement a simple file reverence model to allow XML persistence
-    /// of a List <seealso cref="FileReference"/> via this class.
+    /// Gets/sets the path to a file.
     /// </summary>
-    public class FileReference
-    {
-        /// <summary>
-        /// Gets/sets the path to a file.
-        /// </summary>
-        [XmlAttribute(AttributeName = "path")]
-        public string path { get; set; }
-    }
+    [XmlAttribute(AttributeName = "path")]
+    public string path { get; set; }
 }

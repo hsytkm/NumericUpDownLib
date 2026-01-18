@@ -1,15 +1,14 @@
-﻿namespace UpDownDemoLib.Views
-{
-    using System.Windows.Controls;
+﻿namespace UpDownDemoLib.Views;
 
-    /// <summary>
-    /// Interaction logic for DoubleUpDownDemo.xaml
-    /// </summary>
-    public partial class LongUpDownDemo : UserControl
+using System.Windows.Controls;
+
+/// <summary>
+/// Interaction logic for DoubleUpDownDemo.xaml
+/// </summary>
+public partial class LongUpDownDemo : UserControl
+{
+    public LongUpDownDemo()
     {
-        public LongUpDownDemo()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

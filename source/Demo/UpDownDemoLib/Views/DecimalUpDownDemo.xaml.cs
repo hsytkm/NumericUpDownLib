@@ -1,15 +1,14 @@
-﻿namespace UpDownDemoLib.Views
-{
-    using System.Windows.Controls;
+﻿namespace UpDownDemoLib.Views;
 
-    /// <summary>
-    /// Interaction logic for DoubleUpDownDemo.xaml
-    /// </summary>
-    public partial class DecimalUpDownDemo : UserControl
+using System.Windows.Controls;
+
+/// <summary>
+/// Interaction logic for DoubleUpDownDemo.xaml
+/// </summary>
+public partial class DecimalUpDownDemo : UserControl
+{
+    public DecimalUpDownDemo()
     {
-        public DecimalUpDownDemo()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

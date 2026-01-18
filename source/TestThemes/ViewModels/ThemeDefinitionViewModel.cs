@@ -1,63 +1,56 @@
-﻿namespace TestThemes.ViewModels
+﻿namespace TestThemes.ViewModels;
+
+using MLib.Interfaces;
+
+public class ThemeDefinitionViewModel : Base.ViewModelBase
 {
-    using MLib.Interfaces;
+    #region private fields
+    private readonly IThemeInfo _model;
 
-    public class ThemeDefinitionViewModel : Base.ViewModelBase
+    private bool _IsSelected;
+    #endregion private fields
+
+    #region constructors
+    /// <summary>
+    /// Class constructor
+    /// </summary>
+    /// <param name="model"></param>
+    public ThemeDefinitionViewModel(IThemeInfo model)
+        : this()
     {
-        #region private fields
-        readonly private IThemeInfo _model;
-
-        private bool _IsSelected;
-        #endregion private fields
-
-        #region constructors
-        /// <summary>
-        /// Class constructor
-        /// </summary>
-        /// <param name="model"></param>
-        public ThemeDefinitionViewModel(IThemeInfo model)
-            : this()
-        {
-            _model = model;
-        }
-
-        /// <summary>
-        /// Hidden class constructor
-        /// </summary>
-        protected ThemeDefinitionViewModel()
-        {
-            _model = null;
-            _IsSelected = false;
-        }
-        #endregion constructors
-
-        #region properties
-        /// <summary>
-        /// Gets the static theme model based data items.
-        /// </summary>
-        public IThemeInfo Model
-        {
-            get
-            {
-                return _model;
-            }
-        }
-
-        /// <summary>
-        /// Determines whether this theme is currently selected or not.
-        /// </summary>
-        public bool IsSelected
-        {
-            get { return _IsSelected; }
-
-            set
-            {
-                if (_IsSelected != value)
-                {
-                    _IsSelected = value;
-                }
-            }
-        }
-        #endregion properties
+        _model = model;
     }
+
+    /// <summary>
+    /// Hidden class constructor
+    /// </summary>
+    protected ThemeDefinitionViewModel()
+    {
+        _model = null;
+        _IsSelected = false;
+    }
+    #endregion constructors
+
+    #region properties
+    /// <summary>
+    /// Gets the static theme model based data items.
+    /// </summary>
+    public IThemeInfo Model => _model;
+
+    /// <summary>
+    /// Determines whether this theme is currently selected or not.
+    /// </summary>
+    public bool IsSelected
+    {
+        get => _IsSelected;
+
+        set
+        {
+            if (_IsSelected != value)
+            {
+                _IsSelected = value;
+            }
+        }
+    }
+    #endregion properties
 }
