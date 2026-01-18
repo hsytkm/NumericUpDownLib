@@ -1,9 +1,9 @@
-﻿namespace Settings;
-
+﻿
 using MLib.Interfaces;
 using Settings.Interfaces;
 using Settings.Internal;
 
+namespace Settings;
 /// <summary>
 /// Helper class to initialize an
 /// <see cref="ISettingsManager"/> service interface.

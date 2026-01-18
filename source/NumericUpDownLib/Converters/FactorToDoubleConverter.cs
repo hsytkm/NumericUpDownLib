@@ -1,10 +1,10 @@
-﻿namespace NumericUpDownLib.Converters;
-
+﻿
 using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
+namespace NumericUpDownLib.Converters;
 /// <summary>
 /// Scales a double value by its scale factor (eg. 100.00) up (convert)
 /// or down (convertback), or vice versa if factor is set to 0.01...

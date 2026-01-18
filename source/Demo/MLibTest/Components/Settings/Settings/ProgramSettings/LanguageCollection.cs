@@ -1,7 +1,4 @@
 ﻿namespace Settings.ProgramSettings;
-
-using System;
-
 /// <summary>
 /// Base class for enumeration over languages (and their locale) that
 /// are supported with specific (non-English) button and tool tip strings.

@@ -1,9 +1,7 @@
-﻿namespace TestGenerics.ViewModel.Base;
-
-using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Linq.Expressions;
 
+namespace TestGenerics.ViewModels.Base;
 public class ViewModelBase : INotifyPropertyChanged
 {
 

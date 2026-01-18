@@ -1,9 +1,7 @@
-﻿namespace Settings.Interfaces;
-
-using System.Collections.Generic;
-using Settings.UserProfile;
+﻿using Settings.UserProfile;
 using SettingsModel.Models;
 
+namespace Settings.Interfaces;
 public interface IProfile
 {
     #region properties

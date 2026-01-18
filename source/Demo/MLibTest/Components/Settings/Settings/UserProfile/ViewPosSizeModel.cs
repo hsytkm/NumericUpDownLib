@@ -1,9 +1,7 @@
-﻿namespace Settings.UserProfile;
-
-using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Xml.Serialization;
 
+namespace Settings.UserProfile;
 /// <summary>
 /// Simple wrapper class for allowing windows to persist their
 /// position, height, and width between user sessions in Properties.Default...
@@ -69,7 +67,7 @@ public class ViewPosSizeModel : Interfaces.IViewPosSizeModel
     /// <summary>
     /// Gets a default view size that is used when everything else fails.
     /// </summary>
-    public static ViewSize DefaultSize => new ViewSize(50, 50, 800, 625);
+    public static ViewSize DefaultSize => new(50, 50, 800, 625);
 
     /// <summary>
     /// Get whether this object was created through the default constructor or not

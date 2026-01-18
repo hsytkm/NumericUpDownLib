@@ -1,8 +1,4 @@
-﻿namespace Settings.Internal;
-
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using MLib.Interfaces;
@@ -11,6 +7,7 @@ using Settings.ProgramSettings;
 using Settings.UserProfile;
 using SettingsModel.Interfaces;
 
+namespace Settings.Internal;
 /// <summary>
 /// This class keeps track of program options and user profile (session) data.
 /// Both data items can be added and are loaded on application start to restore
@@ -169,7 +166,7 @@ internal class SettingsManagerImpl : ISettingsManager
                     readFileStream = new FileStream(sessionDataFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
 
                     // Create a new XmlSerializer instance with the type of the test class
-                    XmlSerializer serializerObj = new XmlSerializer(typeof(Profile));
+                    var serializerObj = new XmlSerializer(typeof(Profile));
 
                     // Load the object saved above by using the Deserialize function
                     profileDataModel = (Profile)serializerObj.Deserialize(readFileStream);
@@ -207,11 +204,13 @@ internal class SettingsManagerImpl : ISettingsManager
     /// <returns></returns>
     public bool SaveSessionData(string sessionDataFileName, IProfile model)
     {
-        XmlWriterSettings xws = new XmlWriterSettings();
-        xws.NewLineOnAttributes = true;
-        xws.Indent = true;
-        xws.IndentChars = "  ";
-        xws.Encoding = System.Text.Encoding.UTF8;
+        var xws = new XmlWriterSettings
+        {
+            NewLineOnAttributes = true,
+            Indent = true,
+            IndentChars = "  ",
+            Encoding = System.Text.Encoding.UTF8
+        };
 
         // Create a new file stream to write the serialized object to a file
         XmlWriter? xw = null;
@@ -220,7 +219,7 @@ internal class SettingsManagerImpl : ISettingsManager
             xw = XmlWriter.Create(sessionDataFileName, xws);
 
             // Create a new XmlSerializer instance with the type of the test class
-            XmlSerializer serializerObj = new XmlSerializer(typeof(Profile));
+            var serializerObj = new XmlSerializer(typeof(Profile));
 
             serializerObj.Serialize(xw, model);
 

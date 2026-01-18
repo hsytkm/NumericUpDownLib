@@ -1,8 +1,8 @@
-﻿namespace TestGenerics;
-
+﻿
 using System.Windows;
-using TestGenerics.ViewModel;
+using TestGenerics.ViewModels;
 
+namespace TestGenerics;
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>

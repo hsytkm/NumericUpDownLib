@@ -1,13 +1,13 @@
-﻿namespace TestThemes.ViewModels;
-
+﻿
 using System;
 using System.Windows;
 using System.Windows.Input;
-using Base;
+using TestThemes.ViewModels.Base;
 using MLib.Interfaces;
 using Settings.Interfaces;
 using UpDownDemoLib.Demos.ViewModels;
 
+namespace TestThemes.ViewModels;
 /// <summary>
 /// Main ViewModel vlass that manages session start-up, life span, and shutdown
 /// of the application.
@@ -16,10 +16,10 @@ public class AppViewModel : ViewModelBase, IDisposable
 {
     #region private fields
     private bool mDisposed = false;
-    private AppLifeCycleViewModel _AppLifeCycle = null;
+    private readonly AppLifeCycleViewModel _AppLifeCycle = null;
 
     private bool _isInitialized = false;       // application should be initialized through one method ONLY!
-    private object _lockObject = new object(); // thread lock semaphore
+    private readonly object _lockObject = new(); // thread lock semaphore
 
     private ICommand _ThemeSelectionChangedCommand = null;
     private ThemeViewModel _AppTheme = null;

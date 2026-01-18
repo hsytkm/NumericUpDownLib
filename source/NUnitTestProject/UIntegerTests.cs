@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading;
-using NumericUpDownLib;
+﻿using NumericUpDownLib;
 using NumericUpDownLib.Base;
 using NUnit.Framework;
 

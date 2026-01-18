@@ -1,9 +1,7 @@
-﻿namespace UpDownDemoLib.ViewModels.Base;
-
-using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Linq.Expressions;
 
+namespace UpDownDemoLib.ViewModels.Base;
 /// <summary>
 /// Implements a base class for all viewmodel classes
 /// that implements <seealso cref="INotifyPropertyChanged"/> interface for binding.

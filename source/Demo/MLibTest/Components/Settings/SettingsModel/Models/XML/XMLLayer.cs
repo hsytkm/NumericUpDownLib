@@ -1,12 +1,11 @@
-﻿namespace SettingsModel.Models.XML;
-
-using System;
+﻿#nullable disable
 using System.Data;
 using System.IO;
-using System.Linq;
 using System.Security;
 using SettingsModel.Interfaces;
 using SettingsModel.Models.XML.Converters;
+
+namespace SettingsModel.Models.XML;
 
 /// <summary>
 /// Host API necessary to read and write settings model related data
@@ -14,10 +13,8 @@ using SettingsModel.Models.XML.Converters;
 /// </summary>
 internal class XMLLayer
 {
-    #region fields
-    public static readonly char[] ResvedOptionListCharacters = new char[] { '$', '{', '}' };
+    public static readonly char[] ResvedOptionListCharacters = ['$', '{', '}'];
     protected static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-    #endregion fields
 
     /// <summary>
     /// Write current settings stored and manage in <paramref name="engine"/>
@@ -29,10 +26,8 @@ internal class XMLLayer
     {
         try
         {
-            using (DataSet dataSet = ConvertFromModelToDataSet(engine))
-            {
-                dataSet.WriteXml(fileName);
-            }
+            using DataSet dataSet = ConvertFromModelToDataSet(engine);
+            dataSet.WriteXml(fileName);
         }
         catch (Exception exp)
         {
@@ -51,15 +46,13 @@ internal class XMLLayer
     {
         try
         {
-            using (StringWriter writer = new StringWriter())
+            using var writer = new StringWriter();
+            using (DataSet dataSet = ConvertFromModelToDataSet(engine))
             {
-                using (DataSet dataSet = ConvertFromModelToDataSet(engine))
-                {
-                    dataSet.WriteXml(writer);
-                }
-
-                return writer.ToString();
+                dataSet.WriteXml(writer);
             }
+
+            return writer.ToString();
         }
         catch (Exception exp)
         {
@@ -84,14 +77,12 @@ internal class XMLLayer
             // Do this conversion to generate an implecite schema
             // that can be used by the DataSet to associate each XML item
             // with correct table, row, and column ...
-            using (DataSet dataSet = ConvertFromModelToDataSet(engine))
-            {
-                dataSet.ReadXml(fileName);
+            using DataSet dataSet = ConvertFromModelToDataSet(engine);
+            dataSet.ReadXml(fileName);
 
-                // Transfer data from DataSet, DataTables into internal representation
-                // Convert external format into internal format
-                ConvertFromDataSetToModel(engine, dataSet);
-            }
+            // Transfer data from DataSet, DataTables into internal representation
+            // Convert external format into internal format
+            ConvertFromDataSetToModel(engine, dataSet);
         }
         catch (Exception exp)
         {
@@ -114,17 +105,16 @@ internal class XMLLayer
             // Do this conversion to generate an implecite schema
             // that can be used by the DataSet to associate each XML item
             // with correct table, row, and column ...
-            using (DataSet dataSet = ConvertFromModelToDataSet(engine))
-            {
-                // Do this conversion to generate an implecite schema
-                // that can be used by the DataSet to associate each XML item
-                // with correct table, row, and column ...
-                dataSet.ReadXml(reader);
+            using DataSet dataSet = ConvertFromModelToDataSet(engine);
 
-                // Transfer data from DataSet, DataTables into internal representation
-                // Convert external format into internal format
-                ConvertFromDataSetToModel(engine, dataSet);
-            }
+            // Do this conversion to generate an implecite schema
+            // that can be used by the DataSet to associate each XML item
+            // with correct table, row, and column ...
+            dataSet.ReadXml(reader);
+
+            // Transfer data from DataSet, DataTables into internal representation
+            // Convert external format into internal format
+            ConvertFromDataSetToModel(engine, dataSet);
         }
         catch (Exception exp)
         {
@@ -142,14 +132,13 @@ internal class XMLLayer
     /// <returns></returns>
     private DataSet ConvertFromModelToDataSet(IEngine engine)
     {
-        DataSet mDataSet = new DataSet();
-        DataTable dataTable = null;
-        AlternativeDataTypeHandler handle = new AlternativeDataTypeHandler();
+        var mDataSet = new DataSet();
+        var handle = new AlternativeDataTypeHandler();
 
         foreach (var optionsGroup in engine.GetOptionGroups())
         {
             // Create a new table (per Option group) and add a data row
-            dataTable = CreateTable(optionsGroup);
+            var dataTable = CreateTable(optionsGroup);
 
             mDataSet.Tables.Add(dataTable);
             DataRow row = dataTable.NewRow();
@@ -161,10 +150,9 @@ internal class XMLLayer
 
                 if (optionDefinition.SchemaType == OptionSchemaType.SingleValue)
                 {
-                    if (handler != null)
-                        row[optionDefinition.OptionName] = handler.Convert(optionDefinition.Value as SecureString);
-                    else
-                        row[optionDefinition.OptionName] = optionDefinition.Value;
+                    row[optionDefinition.OptionName] = (handler != null)
+                        ? handler.Convert(optionDefinition.Value as SecureString)
+                        : optionDefinition.Value;
                 }
                 else
                 {
@@ -204,11 +192,10 @@ internal class XMLLayer
     /// <param name="dataSet"></param>
     private void ConvertFromDataSetToModel(IEngine engine, DataSet dataSet)
     {
-        AlternativeDataTypeHandler handle = new AlternativeDataTypeHandler();
+        var handle = new AlternativeDataTypeHandler();
 
         foreach (DataTable table in dataSet.Tables)
         {
-
             // Locate options group for this table
             IOptionGroup optionsGroup = FindOptionsGroup(engine, table.TableName, out var optionName);
 
@@ -236,10 +223,7 @@ internal class XMLLayer
                 {
                     for (int i = 0; i < table.Columns.Count; i++)
                     {
-                        IOptionsSchema schema = null;
-
-                        schema = optionsGroup.GetOptionDefinition(table.Columns[i].ColumnName);
-
+                        var schema = optionsGroup.GetOptionDefinition(table.Columns[i].ColumnName);
                         var handler = handle.FindHandler(schema.TypeOfValue);
 
                         if (handler != null)
@@ -256,8 +240,6 @@ internal class XMLLayer
                 }
             }
         }
-
-        dataSet = null;
     }
 
     /// <summary>
@@ -268,12 +250,14 @@ internal class XMLLayer
     /// <returns></returns>
     private static DataTable CreateTable(IOptionGroup tableSchema)
     {
-        DataTable dataTable = new DataTable(tableSchema.Name);
+        var dataTable = new DataTable(tableSchema.Name);
 
         foreach (var item in tableSchema.GetOptionDefinitions())
         {
-            DataColumn col = new DataColumn(item.OptionName, (item.TypeOfValue == typeof(SecureString) ? typeof(string) : item.TypeOfValue));
-            col.AllowDBNull = item.IsOptional;
+            var col = new DataColumn(item.OptionName, (item.TypeOfValue == typeof(SecureString) ? typeof(string) : item.TypeOfValue))
+            {
+                AllowDBNull = item.IsOptional
+            };
 
             dataTable.Columns.Add(col);
         }
@@ -295,13 +279,14 @@ internal class XMLLayer
                                              IAlternativeDataTypeHandler handler,
                                              DataRow masterRow)
     {
-        DataTable dataTable = new DataTable(tableName);
+        var dataTable = new DataTable(tableName);
 
-        DataColumn col = new DataColumn(columnSchema.OptionName,
-                                        (columnSchema.TypeOfValue == typeof(SecureString) ? typeof(string) :
-                                                                                            columnSchema.TypeOfValue));
-
-        col.AllowDBNull = columnSchema.IsOptional;
+        var col = new DataColumn(columnSchema.OptionName,
+                                (columnSchema.TypeOfValue == typeof(SecureString) ? typeof(string) :
+                                                                                    columnSchema.TypeOfValue))
+        {
+            AllowDBNull = columnSchema.IsOptional
+        };
         dataTable.Columns.Add(col);
 
         ////var list = columnSchema.Value as IEnumerable<object>;
@@ -315,19 +300,16 @@ internal class XMLLayer
                 IsFirstRow = false;
 
                 // Initialize row for caller this must be non-null to make it storeable
-                if (handler != null)
-                    masterRow[columnSchema.OptionName] = handler.Convert(item as SecureString);
-                else
-                    masterRow[columnSchema.OptionName] = item;
+                masterRow[columnSchema.OptionName] = (handler != null)
+                    ? handler.Convert(item as SecureString)
+                    : item;
             }
 
 
             var row = dataTable.NewRow();
-
-            if (handler != null)
-                row[columnSchema.OptionName] = handler.Convert(item as SecureString);
-            else
-                row[columnSchema.OptionName] = item;
+            row[columnSchema.OptionName] = (handler != null)
+                ? handler.Convert(item as SecureString)
+                : item;
 
             dataTable.Rows.Add(row);
         }
@@ -350,8 +332,7 @@ internal class XMLLayer
                                           string tableName,
                                           out string optionName)
     {
-        string groupName = string.Empty;
-        optionName = string.Empty;
+        optionName = "";
 
         // Locate options group for this table
         IOptionGroup optionsGroup = engine.GetOptionGroup(tableName);
@@ -360,7 +341,7 @@ internal class XMLLayer
         // Search for options group that has this field name as reference to this list
         if (optionsGroup == null)
         {
-            if (TryResolveOptionsGroupAndOptionName(tableName, out groupName, out optionName) == true)
+            if (TryResolveOptionsGroupAndOptionName(tableName, out var groupName, out optionName) == true)
                 throw new Exception(string.Format("Unknown item detected. Cannot resolve {0}.", tableName));
 
             optionsGroup = engine.GetOptionGroup(groupName);
@@ -394,8 +375,8 @@ internal class XMLLayer
     /// <returns></returns>
     private bool TryResolveOptionsGroupAndOptionName(string name, out string groupName, out string optionName)
     {
-        groupName = string.Empty;
-        optionName = string.Empty;
+        groupName = "";
+        optionName = "";
         string[] items = name.Split(ResvedOptionListCharacters);
 
         foreach (var item in items)

@@ -1,9 +1,7 @@
-﻿namespace UpDownDemoLib.Converters;
-
-using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows.Data;
 
+namespace UpDownDemoLib.Converters;
 /// <summary>
 /// https://www.wpftutorial.net/RadioButton.html
 /// </summary>

@@ -1,10 +1,8 @@
-﻿namespace TestThemes;
-
-using MLib;
-using MLib.Interfaces;
+﻿using MLib;
 using ServiceLocator;
 using Settings;
-using Settings.Interfaces;
+
+namespace TestThemes;
 
 /// <summary>
 /// Creates and initializes all services.

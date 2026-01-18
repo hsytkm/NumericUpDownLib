@@ -1,8 +1,7 @@
-﻿namespace SettingsModel.Interfaces;
-
-using System;
-using System.Collections.Generic;
+﻿#nullable disable
 using SettingsModel.Models;
+
+namespace SettingsModel.Interfaces;
 
 /// <summary>
 /// Defines available schema information for 1 option.
@@ -41,7 +40,6 @@ public interface IOptionsSchema
     /// </summary>
     object DefaultValue { get; }
 
-    #region methods
     /// <summary>
     /// Removes the value with the specified key
     /// from the internal dictionary.
@@ -119,5 +117,4 @@ public interface IOptionsSchema
     /// </summary>
     /// <returns></returns>
     IEnumerable<KeyValuePair<object, object>> List_GetListOfKeyValues();
-    #endregion methods
 }

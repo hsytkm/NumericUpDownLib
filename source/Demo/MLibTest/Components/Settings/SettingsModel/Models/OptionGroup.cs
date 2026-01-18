@@ -1,9 +1,7 @@
-﻿namespace SettingsModel;
-
-using System;
-using System.Collections.Generic;
+﻿#nullable disable
 using SettingsModel.Interfaces;
-using SettingsModel.Models;
+
+namespace SettingsModel.Models;
 
 /// <summary>
 /// An <seealso cref="OptionGroup"/> is a set of options that is either grouped
@@ -14,7 +12,7 @@ using SettingsModel.Models;
 /// Using this technique means, the set of available application options is dynamic
 /// and can be configured in dependence of current run-time conditions.
 /// </summary>
-internal class OptionGroup : IOptionGroup
+internal sealed class OptionGroup : IOptionGroup
 {
     #region constructors
     /// <summary>
@@ -24,7 +22,7 @@ internal class OptionGroup : IOptionGroup
     public OptionGroup(string name)
     {
         Name = name;
-        OptionDefinitions = new Dictionary<string, OptionsSchema>();
+        OptionDefinitions = [];
         IsDirty = false;
     }
     #endregion constructors

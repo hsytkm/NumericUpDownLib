@@ -1,7 +1,7 @@
-﻿namespace Settings.UserProfile;
-
+﻿
 using System.Windows;
 
+namespace Settings.UserProfile;
 /// <summary>
 /// Provide an interface to implement saving and loading/repositioning of Window or view.
 /// </summary>

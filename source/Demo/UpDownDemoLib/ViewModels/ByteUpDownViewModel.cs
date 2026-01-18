@@ -1,7 +1,7 @@
-﻿namespace UpDownDemoLib.Demos.ViewModels;
-
+﻿
 using UpDownDemoLib.ViewModels;
 
+namespace UpDownDemoLib.Demos.ViewModels;
 /// <summary>
 /// Implements a <see cref="byte"/> based demo viewmodel that can be used
 /// to drive an integer base numeric up down control.

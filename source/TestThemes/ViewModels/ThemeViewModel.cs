@@ -1,5 +1,4 @@
-﻿namespace TestThemes.ViewModels;
-
+﻿
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -7,6 +6,7 @@ using System.Windows.Media;
 using MLib.Interfaces;
 using Settings.Interfaces;
 
+namespace TestThemes.ViewModels;
 /// <summary>
 /// ViewModel class that manages theme properties for binding and display in WPF UI.
 /// </summary>
@@ -14,7 +14,7 @@ public class ThemeViewModel : Base.ViewModelBase
 {
     #region private fields
     private readonly ThemeDefinitionViewModel _DefaultTheme = null;
-    private Dictionary<string, ThemeDefinitionViewModel> _ListOfThemes = null;
+    private readonly Dictionary<string, ThemeDefinitionViewModel> _ListOfThemes = null;
     private ThemeDefinitionViewModel _SelectedTheme = null;
     private bool _IsEnabled = true;
     #endregion private fields
@@ -27,7 +27,7 @@ public class ThemeViewModel : Base.ViewModelBase
     {
         var settings = GetService<ISettingsManager>(); // add the default themes
 
-        _ListOfThemes = new Dictionary<string, ThemeDefinitionViewModel>();
+        _ListOfThemes = [];
 
         foreach (var item in settings.Themes.GetThemeInfos())
         {
@@ -132,7 +132,7 @@ public class ThemeViewModel : Base.ViewModelBase
 
     public static Color GetCurrentAccentColor(ISettingsManager settings)
     {
-        Color AccentColor = default(Color);
+        var AccentColor = default(Color);
 
         if (settings.Options.GetOptionValue<bool>("Appearance", "ApplyWindowsDefaultAccent"))
         {

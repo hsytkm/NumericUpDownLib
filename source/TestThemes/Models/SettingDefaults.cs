@@ -1,9 +1,9 @@
-﻿namespace TestThemes.Models;
-
+﻿
 using System.Windows.Media;
 using Settings.Interfaces;
 using SettingsModel.Interfaces;
 
+namespace TestThemes.Models;
 /// <summary>
 /// Class contains all methods necessary to initialize the applications settings model.
 /// </summary>

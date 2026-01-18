@@ -1,7 +1,7 @@
-﻿namespace SettingsModel.Interfaces;
+﻿#nullable disable
+using SettingsModel.Models;
 
-using System;
-using System.Collections.Generic;
+namespace SettingsModel.Interfaces;
 
 /// <summary>
 /// An option group is a logical group of options

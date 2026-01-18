@@ -1,10 +1,10 @@
-﻿namespace NumericUpDownLib;
-
+﻿
 using System;
 using System.Globalization;
 using System.Windows;
 using NumericUpDownLib.Base;
 
+namespace NumericUpDownLib;
 /// <summary>
 /// Implements an Integer based Numeric Up/Down control.
 ///

@@ -1,9 +1,9 @@
-﻿namespace SettingsModel;
-
-using System;
-using System.Collections.Generic;
+﻿#nullable disable
 using SettingsModel.Interfaces;
+using SettingsModel.Models;
 using SettingsModel.Models.XML;
+
+namespace SettingsModel;
 
 /// <summary>
 /// Defines an interface to an object that implements an OptionsGroup/Options management engine.
@@ -12,24 +12,12 @@ using SettingsModel.Models.XML;
 /// </summary>
 internal class OptionsEngine : IEngine
 {
-    #region fields
-    protected static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    protected static readonly log4net.ILog _logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-    private readonly Dictionary<string, OptionGroup> mOptionGroups = new Dictionary<string, OptionGroup>();
+    private readonly Dictionary<string, OptionGroup> _optionGroups = [];
 
-    private bool mIsDirty = false;
-    #endregion fields
+    private bool _isDirty = false;
 
-    #region constructor
-    /// <summary>
-    /// Class constructor
-    /// </summary>
-    public OptionsEngine()
-    {
-    }
-    #endregion constructor
-
-    #region properties
     /// <summary>
     /// Gets whether any of the properties stored in any options group have changed or not.
     /// </summary>
@@ -38,13 +26,13 @@ internal class OptionsEngine : IEngine
         get
         {
             // Compute and return complex IsDirty property for whole structure if available
-            if (mOptionGroups != null)
+            if (_optionGroups != null)
             {
-                if (mOptionGroups.Count > 0)
+                if (_optionGroups.Count > 0)
                 {
-                    bool isDirty = mIsDirty;
+                    bool isDirty = _isDirty;
 
-                    foreach (var item in mOptionGroups)
+                    foreach (var item in _optionGroups)
                         isDirty |= item.Value.IsDirty;
 
                     return isDirty;
@@ -52,27 +40,25 @@ internal class OptionsEngine : IEngine
             }
 
             // Return simple IsDirty property if nothing else's available
-            return mIsDirty;
+            return _isDirty;
         }
 
         private set
         {
-            if (mIsDirty != value)
-                mIsDirty = value;
+            if (_isDirty != value)
+                _isDirty = value;
 
-            if (mOptionGroups != null)
+            if (_optionGroups != null)
             {
-                foreach (var item in mOptionGroups)
+                foreach (var item in _optionGroups)
                     item.Value.SetUndirty(value);
             }
         }
     }
-    #endregion properties
 
-    #region methods
     public override int GetHashCode()
     {
-        return base.GetHashCode() | mOptionGroups.GetHashCode();
+        return base.GetHashCode() | _optionGroups.GetHashCode();
     }
 
     /// <summary>
@@ -114,13 +100,13 @@ internal class OptionsEngine : IEngine
         if (string.IsNullOrEmpty(message = CheckForValidName(optionName)) == false)
             throw new Exception(message);
 
-        var option = mOptionGroups.TryGetValue(nameOfOptionGroup, out var opgroup);
+        var option = _optionGroups.TryGetValue(nameOfOptionGroup, out var opgroup);
 
         // Create a new option group if this one is not present, yet
         if (opgroup == null)
         {
             opgroup = new OptionGroup(nameOfOptionGroup);
-            mOptionGroups.Add(nameOfOptionGroup, opgroup);
+            _optionGroups.Add(nameOfOptionGroup, opgroup);
 
             IsDirty = true;
         }
@@ -144,12 +130,12 @@ internal class OptionsEngine : IEngine
                         Type type,
                         bool isOptional, List<T> list)
     {
-        var option = mOptionGroups.TryGetValue(nameOfOptionGroup, out var opgroup);
+        var option = _optionGroups.TryGetValue(nameOfOptionGroup, out var opgroup);
 
         if (opgroup == null) // Create a new option group if this one is not present, yet
         {
             opgroup = new OptionGroup(nameOfOptionGroup);
-            mOptionGroups.Add(nameOfOptionGroup, opgroup);
+            _optionGroups.Add(nameOfOptionGroup, opgroup);
 
             IsDirty = true;
         }
@@ -244,9 +230,9 @@ internal class OptionsEngine : IEngine
     /// <returns></returns>
     public IEnumerable<IOptionGroup> GetOptionGroups()
     {
-        if (mOptionGroups != null)
+        if (_optionGroups != null)
         {
-            foreach (var item in mOptionGroups)
+            foreach (var item in _optionGroups)
                 yield return item.Value;
         }
     }
@@ -259,7 +245,7 @@ internal class OptionsEngine : IEngine
     public IOptionGroup GetOptionGroup(string nameOfOptionGroup)
     {
 
-        if (mOptionGroups.TryGetValue(nameOfOptionGroup, out var result) == false)
+        if (_optionGroups.TryGetValue(nameOfOptionGroup, out var result) == false)
             return null;
 
         return result;
@@ -273,11 +259,11 @@ internal class OptionsEngine : IEngine
     /// </summary>
     public void SetUndirty()
     {
-        if (mOptionGroups == null)
+        if (_optionGroups == null)
             return;
 
         // Reset all dirty states of option groups stored in this engine
-        foreach (var item in mOptionGroups)
+        foreach (var item in _optionGroups)
             item.Value.SetUndirty(false);
 
         IsDirty = false;
@@ -293,10 +279,10 @@ internal class OptionsEngine : IEngine
     /// <returns></returns>
     bool IEngine.RemoveOptionsGroup(string nameOfOptionGroup)
     {
-        if (mOptionGroups.TryGetValue(nameOfOptionGroup, out var opgroup) == false)
+        if (_optionGroups.TryGetValue(nameOfOptionGroup, out var opgroup) == false)
             return false;
 
-        mOptionGroups.Remove(nameOfOptionGroup);
+        _optionGroups.Remove(nameOfOptionGroup);
 
         return true;
     }
@@ -315,7 +301,7 @@ internal class OptionsEngine : IEngine
     /// <returns></returns>
     bool IEngine.RemoveOption(string nameOfOptionGroup, string optionName)
     {
-        if (mOptionGroups.TryGetValue(nameOfOptionGroup, out var opgroup) == false)
+        if (_optionGroups.TryGetValue(nameOfOptionGroup, out var opgroup) == false)
             return false;
 
         return opgroup.RemoveOptionDefinition(optionName);
@@ -326,7 +312,7 @@ internal class OptionsEngine : IEngine
     /// </summary>
     void IEngine.RemoveAllOptions()
     {
-        mOptionGroups.Clear();
+        _optionGroups.Clear();
     }
 
     #region XML
@@ -405,5 +391,4 @@ internal class OptionsEngine : IEngine
 
         return null;
     }
-    #endregion methods
 }

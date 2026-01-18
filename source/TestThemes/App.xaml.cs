@@ -1,5 +1,4 @@
-﻿namespace TestThemes;
-
+﻿
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -8,12 +7,13 @@ using System.Windows;
 using log4net;
 using log4net.Config;
 using MLib.Interfaces;
-using Models;
+using TestThemes.Models;
 using MWindowInterfacesLib.Interfaces;
 using Settings.Interfaces;
 using Settings.UserProfile;
-using ViewModels;
+using TestThemes.ViewModels;
 
+namespace TestThemes;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
@@ -190,7 +190,7 @@ public partial class App : Application
 
             string lastActiveFile = settings.SessionData.LastActiveSolution;
 
-            MainWindow mainWin = win as MainWindow;
+            var mainWin = win as MainWindow;
         }
         catch (Exception exp)
         {

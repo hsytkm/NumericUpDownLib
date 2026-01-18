@@ -1,7 +1,7 @@
-﻿namespace SettingsModel.Models.XML.Converters;
-
-using System;
+﻿using System.Runtime.InteropServices;
 using System.Security;
+
+namespace SettingsModel.Models.XML.Converters;
 
 /// <summary>
 /// Source of string encryption and decryption:
@@ -9,20 +9,8 @@ using System.Security;
 /// </summary>
 internal class SecureStringHandler : IAlternativeDataTypeHandler
 {
-    #region fields
-    private static byte[] entropy = System.Text.Encoding.Unicode.GetBytes("Salt Is Usually Not A Password");
-    #endregion fields
+    private static readonly byte[] _entropy = System.Text.Encoding.Unicode.GetBytes("Salt Is Usually Not A Password");
 
-    #region constructors
-    /// <summary>
-    /// Class constructor
-    /// </summary>
-    public SecureStringHandler()
-    {
-    }
-    #endregion constructors
-
-    #region properties
     /// <summary>
     /// Gets the type of the original data type that is to be replaced
     /// with an alternative (typed) representation.
@@ -34,29 +22,26 @@ internal class SecureStringHandler : IAlternativeDataTypeHandler
     /// instead of the original (typed) representation.
     /// </summary>
     public Type TargetDataType => typeof(string);
-    #endregion properties
 
-    #region methods
     /// <summary>
     /// Converts from the source datatype into the target data type representation.
     /// </summary>
     /// <param name="objectInput"></param>
     /// <returns></returns>
-    public object Convert(object objectInput)
+    public object? Convert(object? objectInput)
     {
         if (objectInput is not SecureString input)
             return null;
 
-        byte[] encryptedData = null;
+        byte[]? encryptedData = null;
         try
         {
             encryptedData = System.Security.Cryptography.ProtectedData.Protect(
                 System.Text.Encoding.Unicode.GetBytes(ToInsecureString(input)),
-                entropy,
+                _entropy,
                 System.Security.Cryptography.DataProtectionScope.CurrentUser);
 
-            string result = System.Convert.ToBase64String(encryptedData);
-            return result;
+            return System.Convert.ToBase64String(encryptedData);
         }
         catch (Exception)
         {
@@ -70,7 +55,6 @@ internal class SecureStringHandler : IAlternativeDataTypeHandler
                 {
                     encryptedData[i] = 0;
                 }
-                encryptedData = null;
             }
         }
     }
@@ -80,22 +64,20 @@ internal class SecureStringHandler : IAlternativeDataTypeHandler
     /// </summary>
     /// <param name="objectEncryptedData"></param>
     /// <returns></returns>
-    public object ConvertBack(object objectEncryptedData)
+    public object? ConvertBack(object? objectEncryptedData)
     {
         if (objectEncryptedData is not string encryptedData)
             return null;
 
-        byte[] decryptedData = null;
+        byte[]? decryptedData = null;
         try
         {
             decryptedData = System.Security.Cryptography.ProtectedData.Unprotect(
                 System.Convert.FromBase64String(encryptedData),
-                entropy,
+                _entropy,
                 System.Security.Cryptography.DataProtectionScope.CurrentUser);
 
-            SecureString s = ToSecureString(System.Text.Encoding.Unicode.GetString(decryptedData));
-
-            return s;
+            return ToSecureString(System.Text.Encoding.Unicode.GetString(decryptedData));
         }
         catch
         {
@@ -109,15 +91,13 @@ internal class SecureStringHandler : IAlternativeDataTypeHandler
                 {
                     decryptedData[i] = 0;
                 }
-                decryptedData = null;
             }
         }
     }
 
-    #region private methods
     private SecureString ToSecureString(string input)
     {
-        SecureString secure = new SecureString();
+        var secure = new SecureString();
         foreach (char c in input)
         {
             secure.AppendChar(c);
@@ -128,18 +108,16 @@ internal class SecureStringHandler : IAlternativeDataTypeHandler
 
     private string ToInsecureString(SecureString input)
     {
-        string returnValue = string.Empty;
-        IntPtr ptr = System.Runtime.InteropServices.Marshal.SecureStringToBSTR(input);
+        string returnValue = "";
+        IntPtr ptr = Marshal.SecureStringToBSTR(input);
         try
         {
-            returnValue = System.Runtime.InteropServices.Marshal.PtrToStringBSTR(ptr);
+            returnValue = Marshal.PtrToStringBSTR(ptr);
         }
         finally
         {
-            System.Runtime.InteropServices.Marshal.ZeroFreeBSTR(ptr);
+            Marshal.ZeroFreeBSTR(ptr);
         }
         return returnValue;
     }
-    #endregion private methods
-    #endregion methods
 }

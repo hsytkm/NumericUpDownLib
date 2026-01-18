@@ -1,8 +1,6 @@
-﻿namespace SettingsModel.Models.XML.Converters;
+﻿using System.Security;
 
-using System;
-using System.Collections.Generic;
-using System.Security;
+namespace SettingsModel.Models.XML.Converters;
 
 /// <summary>
 /// Holds a collection of <seealso cref="IAlternativeDataTypeHandler"/> alternative datatype
@@ -11,16 +9,11 @@ using System.Security;
 /// </summary>
 internal class AlternativeDataTypeHandler
 {
-    #region fields
-    private readonly Dictionary<Type, IAlternativeDataTypeHandler> converters = null;
-    #endregion fields
+    private readonly Dictionary<Type, IAlternativeDataTypeHandler> _converters = [];
 
     public AlternativeDataTypeHandler()
     {
-        converters = new Dictionary<Type, IAlternativeDataTypeHandler>
-        {
-            { typeof(SecureString), new SecureStringHandler() }
-        };
+        _converters.Add(typeof(SecureString), new SecureStringHandler());
     }
 
     /// <summary>
@@ -29,17 +22,15 @@ internal class AlternativeDataTypeHandler
     /// </summary>
     /// <param name="typeOfDataType2Handle"></param>
     /// <returns></returns>
-    public IAlternativeDataTypeHandler FindHandler(Type typeOfDataType2Handle)
+    public IAlternativeDataTypeHandler? FindHandler(Type typeOfDataType2Handle)
     {
-        IAlternativeDataTypeHandler ret = null;
+        IAlternativeDataTypeHandler? ret = null;
 
         try
         {
-            converters.TryGetValue(typeOfDataType2Handle, out ret);
+            _converters.TryGetValue(typeOfDataType2Handle, out ret);
         }
-        catch
-        {
-        }
+        catch { }
 
         return ret;
     }

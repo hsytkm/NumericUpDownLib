@@ -1,9 +1,9 @@
-﻿namespace NumericUpDownLib.Converters;
-
+﻿
 using System;
 using System.Globalization;
 using System.Windows.Data;
 
+namespace NumericUpDownLib.Converters;
 /// <summary>
 /// Converts a byte number into a string that contains the number 'X' characters input.
 /// The output of this converter can be used to measure UI Air space to ensure enough
@@ -26,7 +26,7 @@ public sealed class ByteToPlaceHolderStringConverter : IValueConverter
 
         byte byteVal = (byte)value;
 
-        string retString = string.Empty;
+        string retString = "";
         for (int i = 0; i < byteVal; i++)
             retString += "X";
 

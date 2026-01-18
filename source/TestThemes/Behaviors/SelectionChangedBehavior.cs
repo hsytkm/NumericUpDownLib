@@ -1,10 +1,10 @@
-﻿namespace TestThemes.Behaviors;
-
+﻿
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
+namespace TestThemes.Behaviors;
 /// <summary>
 /// Attached behaviour to implement a selection changed command on a Selector (combobox).
 /// The Selector (combobox) generates a SelectionChanged event which in turn generates a

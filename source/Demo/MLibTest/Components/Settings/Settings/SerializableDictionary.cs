@@ -1,12 +1,9 @@
-﻿namespace Settings;
-
-using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Runtime.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
 
+namespace Settings;
 /// <summary>
 /// This class represents a serializable dictionary implementation
 /// of the standard generic dictionary class in .Net.
@@ -65,7 +62,7 @@ public class SerializableDictionary<TKey, TVal> : Dictionary<TKey, TVal>, IXmlSe
         int itemCount = info.GetInt32("itemsCount");
         for (int i = 0; i < itemCount; i++)
         {
-            KeyValuePair<TKey, TVal> kvp = (KeyValuePair<TKey, TVal>)info.GetValue(string.Format(CultureInfo.InvariantCulture, "Item{0}", i), typeof(KeyValuePair<TKey, TVal>));
+            var kvp = (KeyValuePair<TKey, TVal>)info.GetValue(string.Format(CultureInfo.InvariantCulture, "Item{0}", i), typeof(KeyValuePair<TKey, TVal>));
             Add(kvp.Key, kvp.Value);
         }
     }
@@ -113,10 +110,10 @@ public class SerializableDictionary<TKey, TVal> : Dictionary<TKey, TVal>, IXmlSe
         {
             reader.ReadStartElement("item");
             reader.ReadStartElement("key");
-            TKey key = (TKey)KeySerializer.Deserialize(reader);
+            var key = (TKey)KeySerializer.Deserialize(reader);
             reader.ReadEndElement();
             reader.ReadStartElement("value");
-            TVal value = (TVal)ValueSerializer.Deserialize(reader);
+            var value = (TVal)ValueSerializer.Deserialize(reader);
             reader.ReadEndElement();
             reader.ReadEndElement();
             Add(key, value);

@@ -1,35 +1,15 @@
-﻿namespace SettingsModel.Models;
-
-using System;
-using System.Collections.Generic;
+﻿#nullable disable
 using SettingsModel.Interfaces;
 
-/// <summary>
-/// Determines the type of schema of a schema object <seealso cref="IOptionsSchema"/>
-/// </summary>
-public enum OptionSchemaType
-{
-    /// <summary>
-    /// The schema object represents a simple value (bool, int etc).
-    /// </summary>
-    SingleValue = 0,
-
-    /// <summary>
-    /// The schema object represents a list of simple values (bool values, int values etc).
-    /// </summary>
-    List = 1
-}
+namespace SettingsModel.Models;
 
 /// <summary>
 /// Defines available schema information (or the model) for 1 option.
 /// </summary>
-internal class OptionsSchema : IOptionsSchema
+internal sealed class OptionsSchema : IOptionsSchema
 {
-    #region fields
-    private Dictionary<object, object> mValues;
-    #endregion fields
+    private Dictionary<object, object> _mValues;
 
-    #region constructors
     /// <summary>
     /// Class constructor
     /// </summary>
@@ -49,17 +29,11 @@ internal class OptionsSchema : IOptionsSchema
         TypeOfValue = typeOfOptionValue;
         IsOptional = isOptional;
 
-        switch (schemaType)
+        Value = schemaType switch
         {
-            case OptionSchemaType.SingleValue:
-            case OptionSchemaType.List:
-                // Value and default value is same at construction time
-                Value = DefaultValue = defaultValue;
-                break;
-
-            default:
-                throw new NotSupportedException(schemaType.ToString());
-        }
+            OptionSchemaType.SingleValue or OptionSchemaType.List => DefaultValue = defaultValue,   // Value and default value is same at construction time
+            _ => throw new NotSupportedException(schemaType.ToString()),
+        };
     }
 
     public static OptionsSchema CreateOptionsSchema<T>(string optionName,
@@ -69,24 +43,19 @@ internal class OptionsSchema : IOptionsSchema
     {
         var retSchema = new OptionsSchema(optionName, typeOfOptionValue, isOptional, null, OptionSchemaType.List);
 
-        retSchema.InitializeValueList(values != null ? values : new List<T>());
+        retSchema.InitializeValueList(values ?? []);
 
         return retSchema;
     }
 
     private void InitializeValueList<T>(List<T> values)
     {
-        if (mValues != null)
-            mValues.Clear();
-        else
-            mValues = new Dictionary<object, object>();
+        _mValues?.Clear();
+        _mValues = [];
 
         foreach (var item in values)
-            mValues.Add(item, item);
+            _mValues.Add(item, item);
     }
-    #endregion constructors
-
-    #region properties
 
     public OptionSchemaType SchemaType { get; private set; }
 
@@ -116,9 +85,8 @@ internal class OptionsSchema : IOptionsSchema
     /// Gets/sets the default value of this option.
     /// </summary>
     public object DefaultValue { get; private set; }
-    #endregion properties
 
-    #region methods
+
     /// <summary>
     /// Removes the value with the specified key
     /// from the internal dictionary.
@@ -134,8 +102,8 @@ internal class OptionsSchema : IOptionsSchema
     /// </returns>
     public bool List_Remove(string key)
     {
-        if (mValues != null)
-            return mValues.Remove(key);
+        if (_mValues != null)
+            return _mValues.Remove(key);
 
         return false;
     }
@@ -163,8 +131,8 @@ internal class OptionsSchema : IOptionsSchema
     {
         value = null;
 
-        if (mValues != null)
-            return mValues.TryGetValue(key, out value);
+        if (_mValues != null)
+            return _mValues.TryGetValue(key, out value);
 
         return false;
     }
@@ -179,10 +147,10 @@ internal class OptionsSchema : IOptionsSchema
     {
         if (SchemaType == OptionSchemaType.List)
         {
-            if (mValues.TryGetValue(newValue, out var checkValue) == true)
+            if (_mValues.TryGetValue(newValue, out var checkValue) == true)
                 return false;
 
-            mValues.Add(newValue, newValue);
+            _mValues.Add(newValue, newValue);
             return true;
         }
 
@@ -209,10 +177,10 @@ internal class OptionsSchema : IOptionsSchema
         if (SchemaType == OptionSchemaType.List)
         {
             // Remove key if item exists and re-add below
-            if (mValues.TryGetValue(name, out var checkValue) == true)
-                mValues.Remove(name);
+            if (_mValues.TryGetValue(name, out var checkValue) == true)
+                _mValues.Remove(name);
 
-            mValues.Add(name, value);
+            _mValues.Add(name, value);
             return true;
         }
 
@@ -227,7 +195,7 @@ internal class OptionsSchema : IOptionsSchema
     {
         if (SchemaType == OptionSchemaType.List)
         {
-            mValues.Clear();
+            _mValues.Clear();
             return true;
         }
 
@@ -243,7 +211,7 @@ internal class OptionsSchema : IOptionsSchema
     {
         if (SchemaType == OptionSchemaType.List)
         {
-            foreach (var item in mValues)
+            foreach (var item in _mValues)
             {
                 yield return item.Value;
             }
@@ -266,7 +234,7 @@ internal class OptionsSchema : IOptionsSchema
     {
         if (SchemaType == OptionSchemaType.List)
         {
-            foreach (var item in mValues)
+            foreach (var item in _mValues)
             {
                 yield return item;
             }
@@ -274,5 +242,4 @@ internal class OptionsSchema : IOptionsSchema
             yield break; // End of list reached
         }
     }
-    #endregion methods
 }

@@ -1,7 +1,6 @@
-﻿namespace TestThemes.ViewModels;
+﻿using MLib.Interfaces;
 
-using MLib.Interfaces;
-
+namespace TestThemes.ViewModels;
 public class ThemeDefinitionViewModel : Base.ViewModelBase
 {
     #region private fields

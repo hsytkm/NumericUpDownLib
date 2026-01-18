@@ -1,9 +1,9 @@
-﻿namespace TestThemes.Models;
-
+﻿
 using System;
 using System.Globalization;
 using System.Reflection;
 
+namespace TestThemes.Models;
 /// <summary>
 /// Class supplies a set of common static helper methodes that help
 /// localizing application specific items such as setting folders etc.

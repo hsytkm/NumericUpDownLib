@@ -1,13 +1,12 @@
-﻿namespace TestThemes.ViewModels;
-
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
 using System.Windows.Input;
 using MLib.Interfaces;
-using Models;
+using TestThemes.Models;
 using Settings.Interfaces;
 using Settings.UserProfile;
+
+namespace TestThemes.ViewModels;
 
 /// <summary>
 /// Implements application life cycle relevant properties and methods,
@@ -102,8 +101,8 @@ public class AppLifeCycleViewModel : Base.ViewModelBase
             appearance.SetDefaultThemes(settings.Themes);
 
             // Add additional Dark resources to those theme resources added above
-            appearance.AddThemeResources("Dark", new List<Uri>
-            {
+            appearance.AddThemeResources("Dark",
+            [
               new Uri("/TestThemes;component/AppLocalResources.xaml", UriKind.RelativeOrAbsolute)
              ,new Uri("/MWindowLib;component/Themes/DarkTheme.xaml", UriKind.RelativeOrAbsolute)
              ,new Uri("/NumericUpDownLib;component/Themes/DarkBrushs.xaml", UriKind.RelativeOrAbsolute)
@@ -111,7 +110,7 @@ public class AppLifeCycleViewModel : Base.ViewModelBase
              ,new Uri("/TestThemes;component/BindToMLib/NumericUpDownLib/DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
              ,new Uri("/TestThemes;component/BindToMLib/MWindowLib/DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
 
-            }, settings.Themes);
+            ], settings.Themes);
         }
         catch
         {
@@ -120,8 +119,8 @@ public class AppLifeCycleViewModel : Base.ViewModelBase
         try
         {
             // Add additional Light resources to those theme resources added above
-            appearance.AddThemeResources("Light", new List<Uri>
-            {
+            appearance.AddThemeResources("Light",
+            [
               new Uri("/TestThemes;component/AppLocalResources.xaml", UriKind.RelativeOrAbsolute)
              ,new Uri("/MWindowLib;component/Themes/LightTheme.xaml", UriKind.RelativeOrAbsolute)
              ,new Uri("/NumericUpDownLib;component/Themes/LightBrushs.xaml", UriKind.RelativeOrAbsolute)
@@ -129,7 +128,7 @@ public class AppLifeCycleViewModel : Base.ViewModelBase
              ,new Uri("/TestThemes;component/BindToMLib/NumericUpDownLib/DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
              ,new Uri("/TestThemes;component/BindToMLib/MWindowLib/DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
 
-            }, settings.Themes);
+            ], settings.Themes);
         }
         catch
         {

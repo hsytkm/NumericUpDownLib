@@ -1,7 +1,7 @@
-﻿namespace TestThemes;
+﻿using Settings.UserProfile;
+using TestThemes.ViewModels;
 
-using Settings.UserProfile;
-using ViewModels;
+namespace TestThemes;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml

@@ -1,10 +1,8 @@
-﻿namespace Settings.Interfaces;
-
-using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using MLib.Interfaces;
 using Settings.ProgramSettings;
 
+namespace Settings.Interfaces;
 public interface ISettingsManager : IOptionsPanel
 {
     void CheckSettingsOnLoad(double SystemParameters_VirtualScreenLeft, double SystemParameters_VirtualScreenTop);

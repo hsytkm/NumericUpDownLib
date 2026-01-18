@@ -6,9 +6,11 @@
     xmlns:behav="clr-namespace:TestThemes.Behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="clr-namespace:TestThemes.ViewModels"
     Title="MainWindow"
     Width="525"
     Height="400"
+    d:DataContext="{d:DesignInstance Type=viewmodels:AppViewModel}"
     ShowIcon="False"
     mc:Ignorable="d">
     <Grid>

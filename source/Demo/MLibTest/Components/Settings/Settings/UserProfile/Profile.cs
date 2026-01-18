@@ -1,10 +1,8 @@
-﻿namespace Settings.UserProfile;
-
-using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using Settings.Interfaces;
 using SettingsModel.Models;
 
+namespace Settings.UserProfile;
 /// <summary>
 /// This class implements the model of the user profile part
 /// of the application. Typically, users have implicit run-time
@@ -34,7 +32,7 @@ public class Profile : IProfile
             { MainWindowName, new ViewPosSizeModel(ViewPosSizeModel.DefaultSize) }
         };
 
-        LastActiveSolution = LastActiveTargetFile = string.Empty;
+        LastActiveSolution = LastActiveTargetFile = "";
 
         LastActiveSourceFiles = [];
     }
@@ -148,7 +146,7 @@ public class Profile : IProfile
         {
         }
 
-        return string.Empty;
+        return "";
     }
     #endregion methods
 }

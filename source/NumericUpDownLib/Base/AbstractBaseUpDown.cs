@@ -1,5 +1,4 @@
-﻿namespace NumericUpDownLib.Base;
-
+﻿
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,6 +9,7 @@ using System.Windows.Threading;
 using NumericUpDownLib.Enums;
 using NumericUpDownLib.Models;
 
+namespace NumericUpDownLib.Base;
 /// <summary>
 /// Implements an up/down abstract base control.
 /// Source: http://msdn.microsoft.com/en-us/library/vstudio/ms771573%28v=vs.90%29.aspx
@@ -277,8 +277,8 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
     {
         if (d is AbstractBaseUpDown<T> nud)
         {
-            ICommand oldCommand = e.OldValue as ICommand;
-            ICommand newCommand = e.NewValue as ICommand;
+            var oldCommand = e.OldValue as ICommand;
+            var newCommand = e.NewValue as ICommand;
             nud.HookUpCommand(oldCommand, newCommand);
         }
     }
@@ -1024,7 +1024,6 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
     /// <param name="e"></param>
     private void textBox_TextPasted(object sender, DataObjectPastingEventArgs e)
     {
-        TextBox textBox = sender as TextBox;
         if (e.SourceDataObject.GetDataPresent(DataFormats.Text, true) == false)
         {
             return;
@@ -1262,7 +1261,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
 
         try
         {
-            T newValue = (T)value;
+            var newValue = (T)value;
 
             if (control != null)
                 return control.CoerceValue(newValue);
@@ -1290,7 +1289,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
     {
         if (obj is AbstractBaseUpDown<T> control)
         {
-            RoutedPropertyChangedEventArgs<T> e = new RoutedPropertyChangedEventArgs<T>((T)args.OldValue, (T)args.NewValue, ValueChangedEvent);
+            var e = new RoutedPropertyChangedEventArgs<T>((T)args.OldValue, (T)args.NewValue, ValueChangedEvent);
             control.OnValueChanged(e);
 
             CoerceValue(obj, args.NewValue);
@@ -1312,7 +1311,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
     {
         if (obj is AbstractBaseUpDown<T> control)
         {
-            RoutedPropertyChangedEventArgs<T> e = new RoutedPropertyChangedEventArgs<T>((T)args.OldValue, (T)args.NewValue, MinValueChangedEvent);
+            var e = new RoutedPropertyChangedEventArgs<T>((T)args.OldValue, (T)args.NewValue, MinValueChangedEvent);
             control.OnMinValueChanged(e);
 
             CoerceMinValue(obj, args.NewValue);
@@ -1325,7 +1324,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
 
         try
         {
-            T newValue = (T)value;
+            var newValue = (T)value;
 
             if (control != null)
             {
@@ -1354,7 +1353,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
     {
         if (obj is AbstractBaseUpDown<T> control)
         {
-            RoutedPropertyChangedEventArgs<T> e = new RoutedPropertyChangedEventArgs<T>((T)args.OldValue, (T)args.NewValue, MaxValueChangedEvent);
+            var e = new RoutedPropertyChangedEventArgs<T>((T)args.OldValue, (T)args.NewValue, MaxValueChangedEvent);
             control.OnMaxValueChanged(e);
 
             CoerceMaxValue(obj, args.NewValue);
@@ -1367,7 +1366,7 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
 
         try
         {
-            T newValue = (T)value;
+            var newValue = (T)value;
 
             if (control != null)
                 return control.CoerceMaxValue(newValue);
@@ -1412,9 +1411,11 @@ public abstract partial class AbstractBaseUpDown<T> : InputBaseUpDown, ICommandS
 
             if (SetBinding == true && MeasuringControl != null)
             {
-                Binding binding = new Binding();
-                binding.Path = new PropertyPath("ActualWidth");
-                binding.Source = MeasuringControl;
+                var binding = new Binding
+                {
+                    Path = new PropertyPath("ActualWidth"),
+                    Source = MeasuringControl
+                };
 
                 BindingOperations.SetBinding(UserControl, MaxWidthProperty, binding);
             }

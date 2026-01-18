@@ -1,18 +1,17 @@
-﻿namespace SettingsModel.ExtensionMethods;
-
-using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.Security;
+
+namespace SettingsModel.ExtensionMethods;
 
 /// <summary>
 /// Source: http://blogs.msdn.com/b/fpintos/archive/2009/06/12/how-to-properly-convert-securestring-to-string.aspx
 /// </summary>
 internal static class SecureStringExtensionMethod
 {
-    public static string ConvertToUnsecureString(this SecureString securePassword)
+    public static string ConvertToUnsecureString(this SecureString? securePassword)
     {
         if (securePassword == null)
-            throw new ArgumentNullException("securePassword");
+            throw new ArgumentNullException(nameof(securePassword));
 
         IntPtr unmanagedString = IntPtr.Zero;
         try
@@ -26,10 +25,10 @@ internal static class SecureStringExtensionMethod
         }
     }
 
-    public static SecureString ConvertToSecureString(this string password)
+    public static SecureString ConvertToSecureString(this string? password)
     {
         if (password == null)
-            throw new ArgumentNullException("password");
+            throw new ArgumentNullException(nameof(password));
 
         var securePassword = new SecureString();
         foreach (char c in password)

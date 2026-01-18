@@ -1,6 +1,6 @@
-﻿namespace SettingsModel.Models;
+﻿using SettingsModel.Interfaces;
 
-using SettingsModel.Interfaces;
+namespace SettingsModel.Models;
 
 /// <summary>
 /// Factory class to create an <seealso cref="IEngine"/>
