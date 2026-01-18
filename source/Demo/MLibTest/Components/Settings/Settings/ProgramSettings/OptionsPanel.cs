@@ -6,7 +6,7 @@
 
     internal class OptionsPanel : IOptionsPanel
     {
-        private IEngine mQuery = null;
+        private IEngine? mQuery = null;
 
         public OptionsPanel()
         {
@@ -16,7 +16,7 @@
         /// <summary>
         /// Gets the options <seealso cref="IEngine"/> that used to manage program options.
         /// </summary>
-        public IEngine Options
+        public IEngine? Options
         {
             get
             {

@@ -17,8 +17,8 @@
     public class SerializableDictionary<TKey, TVal> : Dictionary<TKey, TVal>, IXmlSerializable, ISerializable
     {
         #region Private Members
-        private XmlSerializer _keySerializer;
-        private XmlSerializer _valueSerializer;
+        private XmlSerializer? _keySerializer;
+        private XmlSerializer? _valueSerializer;
         #endregion
 
         #region Constructors
@@ -139,7 +139,7 @@
             }
         }
 
-        System.Xml.Schema.XmlSchema IXmlSerializable.GetSchema()
+        System.Xml.Schema.XmlSchema? IXmlSerializable.GetSchema()
         {
             return null;
         }

@@ -12,9 +12,9 @@
     /// </summary>
     public class LanguageCollection
     {
-        public string Language { get; set; }
-        public string Locale { get; set; }
-        public string Name { get; set; }
+        public string? Language { get; set; }
+        public string? Locale { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         /// Get BCP47 language tag for this language

@@ -9,8 +9,8 @@
     /// </summary>
     public class EnumMatchToBooleanConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType,
-                              object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType,
+                              object? parameter, CultureInfo culture)
         {
             if (value == null || parameter == null)
                 return false;
@@ -21,8 +21,8 @@
                      StringComparison.InvariantCultureIgnoreCase);
         }
 
-        public object ConvertBack(object value, Type targetType,
-                                  object parameter, CultureInfo culture)
+        public object? ConvertBack(object? value, Type targetType,
+                                  object? parameter, CultureInfo culture)
         {
             if (value == null || parameter == null)
                 return null;

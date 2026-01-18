@@ -13,7 +13,7 @@
         /// <summary>
         /// Standard implementation of <seealso cref="INotifyPropertyChanged"/>.
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// Tell bound controls (via WPF binding) to refresh their display.

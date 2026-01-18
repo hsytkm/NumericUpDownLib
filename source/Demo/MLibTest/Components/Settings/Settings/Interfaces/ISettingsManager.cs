@@ -22,7 +22,7 @@
         IEnumerable<LanguageCollection> GetSupportedLanguages();
 
         #region properties
-        Settings.Interfaces.IProfile SessionData { get; }
+        Settings.Interfaces.IProfile? SessionData { get; }
 
         int IconSizeMin { get; }
         int IconSizeMax { get; }
@@ -49,7 +49,7 @@
         /// Gets the internal name and Uri source for all available themes.
         /// </summary>
         [XmlIgnore]
-        IThemeInfos Themes { get; }
+        IThemeInfos? Themes { get; }
         #endregion properties
     }
 }

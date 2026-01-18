@@ -10,11 +10,11 @@ namespace UpDownDemoLib.ViewModels
     public abstract class BaseUpDownViewModel<T> : UpDownDemoLib.ViewModels.Base.ViewModelBase
     {
         #region fields
-        private T _Value = default(T);
-        private T _MinimumValue = default(T);
-        private T _MaximumValue = default(T);
-        private T _StepSize = default(T);
-        private T _LargeStepSize = default(T);
+        private T? _Value = default(T);
+        private T? _MinimumValue = default(T);
+        private T? _MaximumValue = default(T);
+        private T? _StepSize = default(T);
+        private T? _LargeStepSize = default(T);
         private ModifierKeys _AccelModifierKeys = ModifierKeys.Control;
 
         private bool _IsHexDisplayEnabled = false;
@@ -36,7 +36,7 @@ namespace UpDownDemoLib.ViewModels
         /// <summary>
         /// Get/set integer Value to be displayed in numeric up/down control
         /// </summary>
-        public virtual T Value
+        public virtual T? Value
         {
             get
             {
@@ -58,7 +58,7 @@ namespace UpDownDemoLib.ViewModels
         /// (actual distance) of increment or decrement step.
         /// This value should at leat be one or greater.
         /// </summary>
-        public virtual T StepSize
+        public virtual T? StepSize
         {
             get
             {
@@ -80,7 +80,7 @@ namespace UpDownDemoLib.ViewModels
         /// (actual distance) of increment or decrement step.
         /// This value should at leat be one or greater.
         /// </summary>
-        public virtual T LargeStepSize
+        public virtual T? LargeStepSize
         {
             get
             {
@@ -100,7 +100,7 @@ namespace UpDownDemoLib.ViewModels
         /// <summary>
         /// Get/set minimum integer Value to be displayed in numeric up/down control
         /// </summary>
-        public virtual T MinimumValue
+        public virtual T? MinimumValue
         {
             get
             {
@@ -120,7 +120,7 @@ namespace UpDownDemoLib.ViewModels
         /// <summary>
         /// Get/set maximum integer Value to be displayed in numeric up/down control
         /// </summary>
-        public virtual T MaximumValue
+        public virtual T? MaximumValue
         {
             get
             {
@@ -229,7 +229,7 @@ namespace UpDownDemoLib.ViewModels
         /// <param name="intValue"></param>
         /// <param name="intValue1"></param>
         /// <returns></returns>
-        public abstract bool Compare(T intValue, T intValue1);
+        public abstract bool Compare(T? intValue, T? intValue1);
 
         /// <summary>
         /// Get/set maximum Value of {T} to be displayed in tool tip

@@ -36,7 +36,7 @@
             }
         }
 
-        public TServiceContract GetService<TServiceContract>()
+        public TServiceContract? GetService<TServiceContract>()
             where TServiceContract : class
         {
             object service;

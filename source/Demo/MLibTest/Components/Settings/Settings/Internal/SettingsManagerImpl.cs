@@ -21,9 +21,9 @@
     {
         #region fields
         protected static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly IOptionsPanel mSettingsDataPanel = null;
+        private readonly IOptionsPanel? mSettingsDataPanel = null;
 
-        private IProfile mSessionData = null;
+        private IProfile? mSessionData = null;
         #endregion fields
 
         #region constructor
@@ -50,15 +50,15 @@
         /// <summary>
         /// Implement <seealso cref="IOptionsPanel"/> method to query options from model container.
         /// </summary>
-        public IEngine Options
+        public IEngine? Options
         {
             get
             {
-                return mSettingsDataPanel.Options;
+                return mSettingsDataPanel?.Options;
             }
         }
 
-        public IProfile SessionData
+        public IProfile? SessionData
         {
             get
             {
@@ -165,7 +165,7 @@
         /// Gets the internal name and Uri source for all available themes.
         /// </summary>
         [XmlIgnore]
-        public IThemeInfos Themes { get; private set; }
+        public IThemeInfos? Themes { get; private set; }
         #endregion properties
 
         #region methods
@@ -204,13 +204,13 @@
         /// <returns></returns>
         public void LoadSessionData(string sessionDataFileName)
         {
-            Profile profileDataModel = null;
+            Profile? profileDataModel = null;
 
             try
             {
                 if (System.IO.File.Exists(sessionDataFileName))
                 {
-                    FileStream readFileStream = null;
+                    FileStream? readFileStream = null;
                     try
                     {
                         // Create a new file stream for reading the XML file
@@ -263,7 +263,7 @@
             xws.Encoding = System.Text.Encoding.UTF8;
 
             // Create a new file stream to write the serialized object to a file
-            XmlWriter xw = null;
+            XmlWriter? xw = null;
             try
             {
                 xw = XmlWriter.Create(sessionDataFileName, xws);

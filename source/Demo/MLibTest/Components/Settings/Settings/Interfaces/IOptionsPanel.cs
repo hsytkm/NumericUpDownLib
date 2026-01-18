@@ -4,6 +4,6 @@
 
     public interface IOptionsPanel
     {
-        IEngine Options { get; }
+        IEngine? Options { get; }
     }
 }
