@@ -19,3 +19,4 @@ tmp/
 *.suo
 *.sqlite
 /source/packages
+*.bak
